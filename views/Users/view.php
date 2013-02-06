@@ -1,6 +1,7 @@
 
 <?php $loginStatus = (isset($_SESSION['user'])) ? 'logout' : 'login'; ?>
 <p><a href="<?php echo ROOT .DS . 'users' . DS . $loginStatus; ?>"><?php echo $loginStatus; ?></a></p>
+<p><a href="<?php echo ROOT .DS . 'users' . DS . 'index'; ?>">view all users</a></p>
 <br />
 <h2><?php echo $user['firstname'] . ' ' . $user['lastname']; ?></h2>
 
