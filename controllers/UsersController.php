@@ -14,7 +14,7 @@ class UsersController extends Controller {
 	}
 	
 	public function before() {
-		Core::enforceLogin();
+		
 	}
 	
 	public function add() {
@@ -51,6 +51,8 @@ class UsersController extends Controller {
 		
 		$accessToken = $user[0]['fs_access_token'];
 		$checkins = array();
+		
+		$limit = (isset($_SERVER['user']) && $_SERVER['user']['id'] == $id) ? 20 : 1;
 		
 		if(!empty($accessToken)) {
 

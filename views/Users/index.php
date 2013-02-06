@@ -1,4 +1,7 @@
 
+<?php $loginStatus = (isset($_SESSION['user'])) ? 'logout' : 'login'; ?>
+<p><a href="<?php echo ROOT .DS . 'users' . DS . $loginStatus; ?>"><?php echo $loginStatus; ?></a></p>
+<br />
 <table>
 	<thead>
 		<tr>
@@ -17,5 +20,5 @@
 		<?php endforeach; ?>
 	</tbody>
 </table>
-
+<br />
 <p>Authenticate with Foursquare.  <a href="<?php echo ROOT . DS . 'users' . DS . 'auth_foursquare'; ?>">Click Here</a>
