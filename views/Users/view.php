@@ -28,4 +28,6 @@
 	</table>
 <?php endif; ?>
 
+<?php if(isset($_SESSION['user']) && $_SESSION['user']['id'] = $user['id']): ?>
 <p>Auth with Foursquare. <a href="<?php echo ROOT . DS . 'users' . DS . 'auth_foursquare'; ?>">click here</a></p>
+<?php endif; ?>

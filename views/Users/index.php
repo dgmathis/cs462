@@ -21,4 +21,6 @@
 	</tbody>
 </table>
 <br />
+<?php if(isset($_SESSION['user'])): ?>
 <p>Authenticate with Foursquare.  <a href="<?php echo ROOT . DS . 'users' . DS . 'auth_foursquare'; ?>">Click Here</a>
+<?php endif; ?>
