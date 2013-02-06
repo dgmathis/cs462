@@ -56,7 +56,7 @@ class UsersController extends Controller {
 		
 		if(!empty($accessToken)) {
 
-			$url = "https://api.foursquare.com/v2/users/self/checkins?oauth_token=$accessToken&v=20130101&limit=10";
+			$url = "https://api.foursquare.com/v2/users/self/checkins?oauth_token=$accessToken&v=20130101&$limit=10";
 		
 			$resultJSON = file_get_contents($url);
 			
