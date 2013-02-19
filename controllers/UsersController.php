@@ -52,8 +52,8 @@ class UsersController extends Controller {
 		$accessToken = $user[0]['fs_access_token'];
 		$checkins = array();
 		
-		$limit = (isset($_SERVER['user']) && $_SERVER['user']['id'] == $id) ? 20 : 1;
-		
+		$limit = (isset($_SESSION['user']) && $_SESSION['user']['id'] == $id) ? 20 : 1;
+			
 		if(!empty($accessToken)) {
 
 			$url = "https://api.foursquare.com/v2/users/self/checkins?oauth_token=$accessToken&v=20130101&limit=$limit";
