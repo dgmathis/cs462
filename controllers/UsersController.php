@@ -126,7 +126,9 @@ class UsersController extends Controller {
 			
 			$userModel = new UsersModel();
 			
-			$userModel->update($data);
+			$result = $userModel->update($data);
+			
+			error_log("result: " . $result);
 			
 			header('location: ' . ROOT . '/users/view/' . $data['id']);
 		}
