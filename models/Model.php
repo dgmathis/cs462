@@ -55,6 +55,8 @@ class Model {
 	
 	public function update($data) {
 		
+		error_log("Made it here 2");
+		
 		$id = $data['id'];
 		
 		if(empty($id)) {
@@ -72,6 +74,8 @@ class Model {
 		$query = rtrim($query, ',');
 		
 		$query .= " WHERE $table.id='$id';";
+		
+		
 		
 		return $this->database->update($query);
 	}

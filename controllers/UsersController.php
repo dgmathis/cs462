@@ -116,6 +116,7 @@ class UsersController extends Controller {
 	}
 	
 	public function register_esl() {
+		error_log("Made it here 1");
 		if(empty($_SESSION['user'])) {
 			header('location: ' . ROOT . '/users/login');
 		}
