@@ -1,8 +1,8 @@
 
 <h3><?php echo $user['firstname'] . ' ' . $user['lastname']; ?></h3>
 
-<?php if(!empty($user['esl'])): ?>
-<p>Event Signal URL: <?php echo $user['esl']; ?></p>
+<?php if(!empty($data['esl'])): ?>
+<p>Event Signal URL: <?php echo $data['esl']; ?></p>
 <?php endif; ?>
 
 <?php if(!empty($checkins)): ?>

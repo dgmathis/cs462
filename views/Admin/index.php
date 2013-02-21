@@ -11,7 +11,7 @@
 	<tbody>
 		<?php foreach($availableUsers as $driver): ?>
 			<tr>
-				<td><a href="<?php echo ROOT . DS . 'users' . DS . 'view' . DS . $driver['id']; ?>"><?php echo $driver['firstname'] . ' ' . $driver['lastname']; ?></a></td>
+				<td><?php echo $driver['firstname'] . ' ' . $driver['lastname']; ?></td>
 				<td><?php echo isset($driver['esl']) ? $driver['esl'] : '&nbsp;'; ?></td>
 			</tr>
 		<?php endforeach; ?>

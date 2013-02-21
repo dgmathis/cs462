@@ -2,39 +2,42 @@
 
 class UsersModel extends Model {
 	
-	public function addUser($data) {
+	public function addUser($user) {
+		$id = $user['id'];
 		
-		$username = $data['username'];
-		$password = $data['password'];
-		$firstname = $data['firstname'];
-		$lastname = $data['lastname'];
-
-		$query = "INSERT INTO users (username, password, firstname, lastname) VALUES ('$username', '$password', '$firstname', '$lastname');";
-
-		if(!mysql_query($query)) {
-			die("Failed to save: " . mysql_error());
+		if(empty($user['password'])) {
+			return array('code' => 0, 'message' => 'Please provide a password.');
 		}
 		
-		return true;
+		if(empty($user['username'])) {
+			return array('code' => 0, 'message' => 'Please provide a username.');
+		}
+		
+		if(empty($user['firstname'])) {
+			return array('code' => 0, 'message' => 'Please provide a firstname.');
+		}
+		
+		if(empty($user['lastname'])) {
+			return array('code' => 0, 'message' => 'Please provide a lastname.');
+		}
+		
+		$existing = $this->select(array(
+			'Conditions' => "id = '$id'",
+			'Limit' => 1
+		));
+		
+		if(!empty($existing)) {
+			return array('code' => 0, 'message' => 'Username is already taken.');
+		}
+		
+		$user['password'] = Core::hash($user['password']);
+		
+		if(!$this->insert($user)) {
+			return array('code' => 0, 'message' => 'Failed to add user.  Unknown reason');
+		}
+		
+		return array('code' => 1, 'message' => 'Successfully added user.');
 	}
-	
-//	public function getUsers() {
-//		$query = "SELECT * FROM users";
-//		
-//		$result = mysql_query($query);
-//		
-//		if(!$result) {
-//			die("Failed to get users: " . mysql_error());
-//		}
-//		
-//		$users = array();
-//		
-//		while($row = mysql_fetch_array($result)) {
-//			$users[] = $row;
-//		}
-//		
-//		return $users;
-//	}
 	
 	public function getDrivers() {
 		$drivers = $this->select(array(

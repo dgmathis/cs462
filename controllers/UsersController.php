@@ -20,23 +20,25 @@ class UsersController extends Controller {
 	public function add() {
 		if(!empty($_POST)) {
 			// Add a new user
-			$user['username'] = $_POST['username'];
-			$user['password'] = Core::hash($_POST['password']);
-			$user['firstname'] = $_POST['firstname'];
-			$user['lastname'] = $_POST['lastname'];
+			$data['username'] = $_POST['username'];
+			$data['password'] = $_POST['password'];
+			$data['firstname'] = $_POST['firstname'];
+			$data['lastname'] = $_POST['lastname'];
 			
 			$userModel = new UsersModel();
 			
-			$userModel->insert($user);
+			$result = $userModel->addUser($data);
+			
+			if($result['code'] == 0) {
+				$this->setVar('message', $result['message']);
+			}
 			
 			$user = $userModel->select(array(
-				'Conditions' => "username = '" . $user['username'] . "' AND password = '" . $user['password'] . "'",
+				'Conditions' => "username = '" . $data['username'] . "'",
 				'Limit' => 1
 			));
 			
-			if(empty($user) || empty($user[0])) {
-				header('location: ' . ROOT . DS . 'users' . DS . 'login');
-			} else {
+			if(!empty($user) && !empty($user[0])) {
 				$_SESSION['user'] = $user[0];
 				
 				$id = $user[0]['id'];
@@ -44,7 +46,7 @@ class UsersController extends Controller {
 				exit();
 			}
 			
-			header('location: ' . ROOT . DS . 'users' . DS . 'login');
+			$this->setVar('data', $data);
 		}
 	}
 	

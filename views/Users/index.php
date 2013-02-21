@@ -1,6 +1,6 @@
 <h3>Drivers</h3>
 <div class="mini-layout">
-<table class="table table-striped">
+<table class="table table-striped table-bordered">
 	<thead>
 		<tr>
 			<th>Name</th>

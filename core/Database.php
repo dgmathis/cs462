@@ -44,20 +44,12 @@ class Database{
 	public function insert($query) {
 		
 		$result = $this->connection->query($query);
-				
-		if(!$result) {
-			die($this->connection->error);
-		}
 		
 		return $result;
 	}
 	
 	public function update($query) {
 		$result = $this->connection->query($query);
-		
-		if(!$result) {
-			die($this->connection->error);
-		}
 		
 		return $result;
 	}
