@@ -5,7 +5,7 @@
 </div>
 <?php endif; ?>
 
-<h3>User Login</h3>
+<h3>Driver Login</h3>
 
 <form method="POST" action="">
 	<label>Username:</label><input name="username" /><br />
