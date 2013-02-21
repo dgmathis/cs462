@@ -13,10 +13,10 @@ class Model {
 	public function select($params = array()) {
 		
 		$table = $this->getName();
-		$fields = $params['Fields'];
-		$conditions = $params['Conditions'];
-		$order = $params['Order'];
-		$limit = $params['Limit'];
+		$fields = isset($params['Fields']) ? $params['Fields'] : '';
+		$conditions = isset($params['Conditions']) ? $params['Conditions'] : '';
+		$order = isset($params['Order']) ? $params['Order'] : '';
+		$limit = isset($params['Limit']) ? $params['Limit'] : '';
 		
 		if(empty($fields)) {
 			$fields = '*';
