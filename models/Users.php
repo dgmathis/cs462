@@ -18,21 +18,29 @@ class UsersModel extends Model {
 		return true;
 	}
 	
-	public function getUsers() {
-		$query = "SELECT * FROM users";
+//	public function getUsers() {
+//		$query = "SELECT * FROM users";
+//		
+//		$result = mysql_query($query);
+//		
+//		if(!$result) {
+//			die("Failed to get users: " . mysql_error());
+//		}
+//		
+//		$users = array();
+//		
+//		while($row = mysql_fetch_array($result)) {
+//			$users[] = $row;
+//		}
+//		
+//		return $users;
+//	}
+	
+	public function getDrivers() {
+		$drivers = $this->select(array(
+			'Conditions' => "type = 'driver'"
+		));
 		
-		$result = mysql_query($query);
-		
-		if(!$result) {
-			die("Failed to get users: " . mysql_error());
-		}
-		
-		$users = array();
-		
-		while($row = mysql_fetch_array($result)) {
-			$users[] = $row;
-		}
-		
-		return $users;
+		return $drivers;
 	}
 }

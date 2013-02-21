@@ -3,15 +3,15 @@
 $username = '';
 $userUrl = '#';
 $loginStatus = 'login';
-$loginUrl = ROOT . '/users/login';
+$loginUrl = ROOT . '/admin/login';
 
-if(isset($_SESSION['user'])) {
-	$username = $_SESSION['user']['username'];
-	$userUrl = ROOT . '/users/view/' . $_SESSION['user']['id'];
+if(isset($_SESSION['admin'])) {
+	$username = $_SESSION['admin']['username'];
+	$userUrl = ROOT . '/admin';
 	$loginStatus = 'logout';
-	$loginUrl = ROOT . '/users/logout';
+	$loginUrl = ROOT . '/admin/logout';
 }
-		
+
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +28,7 @@ if(isset($_SESSION['user'])) {
 		<script type="text/javascript" src="<?php echo ROOT; ?>/bootstrap/js/bootstrap.min.js"></script>
 	</head>
 	<body>
-		<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
 				<div class="container">
 					<a class="brand" href="<?php echo ROOT; ?>">Flower Frenzy</a>

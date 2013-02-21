@@ -8,6 +8,6 @@
 </form>
 <br />
 <div>
-	<?php if (isset($user)): print_r($user); endif; ?>
+	<?php if (isset($driver)): print_r($driver); endif; ?>
 	<?php if(isset($result) && $result == true): echo "<br />Saved!<br />"; endif; ?>
 </div>

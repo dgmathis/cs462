@@ -78,13 +78,13 @@ class Core {
 	
 	private function render($controller, $_action) {
 		extract($controller->getVars());
-
+		
 		ob_start();
 		
 		include 'views' . DS . $controller->getName() . DS . $_action . '.php';
 		
 		$content_for_layout = ob_get_clean();
-
+		
 		$layout = $controller->getLayout();
 		
 		include 'views' . DS . 'layouts' . DS . $layout . '.php';

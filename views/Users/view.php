@@ -1,12 +1,13 @@
 
-<?php $loginStatus = (isset($_SESSION['user'])) ? 'logout' : 'login'; ?>
-<p><a href="<?php echo ROOT .DS . 'users' . DS . $loginStatus; ?>"><?php echo $loginStatus; ?></a></p>
-<p><a href="<?php echo ROOT .DS . 'users' . DS . 'index'; ?>">view all users</a></p>
-<br />
-<h2><?php echo $user['firstname'] . ' ' . $user['lastname']; ?></h2>
+<h3><?php echo $user['firstname'] . ' ' . $user['lastname']; ?></h3>
+
+<?php if(!empty($user['esl'])): ?>
+<p>Event Signal URL: <?php echo $user['esl']; ?></p>
+<?php endif; ?>
 
 <?php if(!empty($checkins)): ?>
-	<table>
+	<h4>Check-ins</h4>
+	<table class="table table-bordered table-striped">
 		<thead>
 			<tr>
 				<th>Venue</th>
@@ -28,6 +29,11 @@
 	</table>
 <?php endif; ?>
 
-<?php if(isset($_SESSION['user']) && $_SESSION['user']['id'] == $user['id'] && empty($_SESSION['user']['fs_access_token'])): ?>
-<p>Auth with Foursquare. <a href="<?php echo ROOT . DS . 'users' . DS . 'auth_foursquare'; ?>">click here</a></p>
+<?php if($allowFSAuth): ?>
+<a class="btn btn-primary" href="<?php echo ROOT . DS . 'users' . DS . 'auth_foursquare'; ?>">Authenticate with Foursquare</a></p>
 <?php endif; ?>
+
+<?php if($allowRegisterESL): ?>
+<a class="btn btn-primary" href="<?php echo ROOT; ?>/users/register_esl">Register your event signal URL</a>
+<?php endif; ?>
+

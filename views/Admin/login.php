@@ -5,11 +5,10 @@
 </div>
 <?php endif; ?>
 
-<h3>User Login</h3>
+<h3>Admin Login</h3>
 
 <form method="POST" action="">
 	<label>Username:</label><input name="username" /><br />
 	<label>Password:</label><input name="password" type="password" /><br />
-	<input type="submit" class="btn btn-primary" value="Login" />
+	<input class="btn" type="submit" value="Login" />
 </form>
-<p>Don't have an account? <a href="<?php echo ROOT . DS . 'users' . DS . 'add'; ?>">Create one</a></p>

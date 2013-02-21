@@ -29,7 +29,22 @@ class UsersController extends Controller {
 			
 			$userModel->insert($user);
 			
-			header('location: ' . ROOT . DS . 'users' . DS);
+			$user = $userModel->select(array(
+				'Conditions' => "username = '" . $user['username'] . "' AND password = '" . $user['password'] . "'",
+				'Limit' => 1
+			));
+			
+			if(empty($user) || empty($user[0])) {
+				header('location: ' . ROOT . DS . 'users' . DS . 'login');
+			} else {
+				$_SESSION['user'] = $user[0];
+				
+				$id = $user[0]['id'];
+				header('location: ' . ROOT . DS . 'users' . DS . 'view' . DS . $id);
+				exit();
+			}
+			
+			header('location: ' . ROOT . DS . 'users' . DS . 'login');
 		}
 	}
 	
@@ -37,23 +52,23 @@ class UsersController extends Controller {
 		if(empty($id)){
 			die('Please provide an id for the user.');
 		}
-		
+
 		$userModel = new UsersModel();
-		
+
 		$user = $userModel->select(array(
 			'Conditions' => "id = '$id'",
 			'Limit' => 1
 		));
-		
+
 		if(empty($user) || empty($user[0])){
 			die('Could not find that user');
 		}
-		
+
 		$accessToken = $user[0]['fs_access_token'];
 		$checkins = array();
 		
 		$limit = (isset($_SESSION['user']) && $_SESSION['user']['id'] == $id) ? 20 : 1;
-			
+
 		if(!empty($accessToken)) {
 
 			$url = "https://api.foursquare.com/v2/users/self/checkins?oauth_token=$accessToken&v=20130101&limit=$limit";
@@ -65,6 +80,11 @@ class UsersController extends Controller {
 			$checkins = $result['response']['checkins']['items'];
 		}
 		
+		$allowFSAuth = (isset($_SESSION['user']) && $_SESSION['user']['id'] == $user[0]['id'] && empty($_SESSION['user']['fs_access_token']));
+		$allowRegisterESL = (isset($_SESSION['user']) && $_SESSION['user']['id'] == $user[0]['id'] && empty($user[0]['esl']));
+		
+		$this->setVar('allowRegisterESL', $allowRegisterESL);
+		$this->setVar('allowFSAuth', $allowFSAuth);
 		$this->setVar('user', $user[0]);
 		$this->setVar('checkins', $checkins);
 	}
@@ -93,6 +113,23 @@ class UsersController extends Controller {
 		}
 	}
 	
+	public function register_esl() {
+		if(empty($_SESSION['user'])) {
+			header('location: ' . ROOT . '/users/login');
+		}
+		
+		if(!empty($_POST)) {
+			$data['id'] = $_SESSION['user']['id'];
+			$data['esl'] = $_POST['esl'];
+			
+			$userModel = new UsersModel();
+			
+			$userModel->update($data);
+			
+			header('location: ' . ROOT . '/users/view/' . $data['id']);
+		}
+	}
+	
 	public function login() {
 		if(!empty($_POST)) {
 			$username = $_POST['username'];
@@ -114,10 +151,6 @@ class UsersController extends Controller {
 				header('location: ' . ROOT . DS . 'users' . DS . 'view' . DS . $id);
 				exit();
 			}
-		}
-		
-		if(isset($_SESSION['user'])) {
-			print_r($_SESSION['user']);
 		}
 	}
 	
