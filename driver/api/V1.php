@@ -6,6 +6,8 @@ class V1 extends API {
 		
 		$checkin = json_decode($_POST['checkin'], true);
 
+		error_log($_POST['checkin']);
+		
 		$results['code'] = 1;
 		$results['message'] = 'Success';
 		
