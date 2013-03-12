@@ -7,9 +7,9 @@ class FourSquare {
 	private $redirectURI;
 	
 	public function __construct() {
-		$this->clientId = '4O3BSLAVZKDU5EGZDNH22OOYPXOIUOTPOAKZBJS40RUIOOAV';
-		$this->clientSectret = 'JT2EKNDC0HB3JWQWCOIURDR42JYQMOJHGITKPHHCMQZUPRYL';
-		$this->redirectURI = 'http://' . $_SERVER['SERVER_NAME'] . '/cs462/users/auth_foursquare';
+		$this->clientId = 'FVDTO5P1LZGWOTK1Z1OOMRJ2RUGQJLEA2G2E1CHSV04KEXER';
+		$this->clientSectret = 'NL4MA0MXXYMSGRNHMEBPQ0JAAGAOHR0R25BXKFF0MLWRKXB0';
+		$this->redirectURI = 'http://' . $_SERVER['SERVER_NAME'] . '/cs462/store/users/auth_foursquare';
 	}
 	
 	public function requestCode() {
