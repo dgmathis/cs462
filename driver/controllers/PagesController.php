@@ -14,8 +14,13 @@ class PagesController extends Controller {
 			header('Location: ' . ROOT . DS . 'create_account');
 		}
 		
-		print("INDEX"); 
-		die();
+		$data['firstname'] = $settingsModel->getValue('firstname');
+		$data['lastname'] = $settingsModel->getValue('lastname');
+		$data['last_checkin_lat'] = $settingsModel->getValue('last_checkin_lat');
+		$data['last_checkin_lng'] = $settingsModel->getValue('last_checkin_lng');
+		$data['fs_access_token'] = $settingsModel->getValue('fs_access_token');
+		
+		$this->setVar('data', $data);
 	}
 	
 	public function create_account() {
