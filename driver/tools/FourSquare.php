@@ -9,7 +9,7 @@ class FourSquare {
 	public function __construct() {
 		$this->clientId = '4O3BSLAVZKDU5EGZDNH22OOYPXOIUOTPOAKZBJS40RUIOOAV';
 		$this->clientSectret = 'JT2EKNDC0HB3JWQWCOIURDR42JYQMOJHGITKPHHCMQZUPRYL';
-		$this->redirectURI = 'http://' . $_SERVER['SERVER_NAME'] . '/cs462/users/auth_foursquare';
+		$this->redirectURI = 'http://' . $_SERVER['SERVER_NAME'] . '/cs462/driver/settings/auth_foursquare';
 	}
 	
 	public function requestCode() {
