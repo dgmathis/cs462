@@ -82,8 +82,8 @@ class UsersController extends Controller {
 			$checkins = $result['response']['checkins']['items'];
 		}
 		
-		$allowFSAuth = (isset($_SESSION['user']) && $_SESSION['user']['id'] == $user[0]['id'] && empty($_SESSION['user']['fs_access_token']));
-		$allowRegisterESL = (isset($_SESSION['user']) && $_SESSION['user']['id'] == $user[0]['id'] && empty($user[0]['esl']));
+		$allowFSAuth = (isset($_SESSION['user']) && $_SESSION['user']['id'] == $user[0]['id']);
+		$allowRegisterESL = (isset($_SESSION['user']) && $_SESSION['user']['id'] == $user[0]['id']);
 		
 		$this->setVar('allowRegisterESL', $allowRegisterESL);
 		$this->setVar('allowFSAuth', $allowFSAuth);
@@ -112,25 +112,6 @@ class UsersController extends Controller {
 			$userModel->update($user);
 			
 			header('location: ' . ROOT . DS . 'users');
-		}
-	}
-	
-	public function register_esl() {
-		if(empty($_SESSION['user'])) {
-			header('location: ' . ROOT . '/users/login');
-		}
-		
-		if(!empty($_POST)) {
-			$data['id'] = $_SESSION['user']['id'];
-			$data['esl'] = $_POST['esl'];
-			
-			$userModel = new UsersModel();
-			
-			$result = $userModel->update($data);
-			
-			error_log("result: " . $result);
-			
-			header('location: ' . ROOT . '/users/view/' . $data['id']);
 		}
 	}
 	

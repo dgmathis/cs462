@@ -6,7 +6,7 @@ class Database{
 	private static $instance = NULL;
 
 	private function __construct() {
-		$this->connection = new mysqli('localhost', 'root', 'welcome1234', 'cs462');
+		$this->connection = new mysqli('localhost', 'root', 'welcome1234', 'cs462_driver');
 
 		if($this->connection->connect_errno) {
 			die('Could not connect to database: ' . $this->connection->connect_error);
@@ -27,7 +27,7 @@ class Database{
 	
 	public function select($query) {
 
-		$result = $this->connection->query($query);
+		$result = $this->query($query);
 		$rows = array();
 		
 		if(!$result) {
@@ -42,13 +42,14 @@ class Database{
 	}
 	
 	public function insert($query) {
-		
-		$result = $this->connection->query($query);
-		
-		return $result;
+		return $this->query($query);
 	}
 	
 	public function update($query) {
+		return $this->query($query);
+	}
+	
+	public function query($query) {
 		$result = $this->connection->query($query);
 		
 		return $result;

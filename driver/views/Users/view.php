@@ -1,8 +1,8 @@
 
 <h3><?php echo $user['firstname'] . ' ' . $user['lastname']; ?></h3>
 
-<?php if(!empty($data['esl'])): ?>
-<p>Event Signal URL: <?php echo $data['esl']; ?></p>
+<?php if(!empty($user['esl'])): ?>
+<p>Event Signal URL: <?php echo $user['esl']; ?></p>
 <?php endif; ?>
 
 <?php if(!empty($checkins)): ?>
@@ -30,10 +30,10 @@
 <?php endif; ?>
 
 <?php if($allowFSAuth): ?>
-<a class="btn btn-primary" href="<?php echo ROOT . DS . 'users' . DS . 'auth_foursquare'; ?>">Authenticate with Foursquare</a></p>
+<a class="btn btn-primary" href="<?php echo ROOT . DS . 'users' . DS . 'auth_foursquare'; ?>"><?php echo empty($user['fs_access_token']) ? 'Authenticate' : 'Re-authenticate'; ?> with Foursquare</a></p>
 <?php endif; ?>
 
 <?php if($allowRegisterESL): ?>
-<a class="btn btn-primary" href="<?php echo ROOT; ?>/users/register_esl">Register your event signal URL</a>
+<a class="btn btn-primary" href="<?php echo ROOT; ?>/users/register_esl"><?php echo empty($user['esl']) ? 'Register' : 'Re-register'; ?> your event signal URL</a>
 <?php endif; ?>
 

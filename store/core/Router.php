@@ -15,7 +15,7 @@ class Router {
 		
 		if(isset($_GET['url'])) {
 			$url = explode('/', $_GET['url']);
-
+			
 			if(!empty($url[0])) {
 				$this->controller = ucwords($url[0]);
 			}
