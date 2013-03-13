@@ -16,8 +16,12 @@ class PagesController extends Controller {
 		
 		$data['firstname'] = $settingsModel->getValue('firstname');
 		$data['lastname'] = $settingsModel->getValue('lastname');
-		$data['last_checkin_lat'] = $settingsModel->getValue('last_checkin_lat');
-		$data['last_checkin_lng'] = $settingsModel->getValue('last_checkin_lng');
+		
+		$lastCheckin = $settingsModel->getValue('last_checkin');
+		if(!empty($lastCheckin)) {
+			$data['last_checkin'] = json_decode($lastCheckin, true);
+		}
+		
 		$data['fs_access_token'] = $settingsModel->getValue('fs_access_token');
 		
 		$this->setVar('data', $data);

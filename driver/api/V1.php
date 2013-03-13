@@ -11,17 +11,14 @@ class V1 extends API {
 		$results['code'] = 1;
 		$results['message'] = 'Success';
 		
-		$lat = $checkin['venue']['location']['lat'];
-		$lng = $checkin['venue']['location']['lng'];
-		
-		$results['lat'] = $lat;
-		$results['lng'] = $lng;
-		
+		$checkinData['name'] = $checkin['venue']['name'];
+		$checkinData['lat'] = $checkin['venue']['location']['lat'];
+		$checkinData['lng'] = $checkin['venue']['location']['lng'];
+
 		$settingsModel = $this->getModel('Settings');
 		
-		$settingsModel->setValue('last_checkin_lat', $lat);
-		$settingsModel->setValue('last_checkin_lng', $lng);
-		
+		$settingsModel->setValue('last_checkin', json_encode($checkinData));
+
 		print(json_encode($results));
 		die();
 	}
