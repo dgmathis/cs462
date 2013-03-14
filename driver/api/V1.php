@@ -28,20 +28,20 @@ class V1 extends API {
 		
 		$deliveryId = $settingsModel->getValue('last_delivery_id');
 		
-		error_log("Received Bid Reply...");
-		error_log("Delivery Id: " . $deliveryId);
-		error_log(json_encode($_POST));
-		
 		if(!empty($_POST)) {
 			$body = !empty($_POST['body']) ? $_POST['body'] : '';
+			
+			error_log("Body: " . $body);
 			
 			if(strcasecmp(trim($body), 'Bid anyway') == 0) {
 				if(!empty($deliveryId)){
 					
+					error_log("Made it here 1");
+					
 					$deliverysModel = $this->getModel('Deliverys');
 					
 					$deliveryData = $deliverysModel->select(array(
-						'Conditions' => "id = '$deliveryId'",
+						'Conditions' => "ext_delivery_id = '$deliveryId'",
 						'Limit' => 1
 					));
 					
@@ -50,12 +50,16 @@ class V1 extends API {
 						die();
 					}
 					
+					error_log("Made it here 2");
+					
 					$storeId = $deliveryData[0]['store_id'];
 					
 					if(empty($storeId)) {
 						error_log("Unable to get StoreId");
 						die();
 					}
+					
+					error_log("Made it here 3");
 					
 					$storesModel = $this->getModel('Stores');
 					
@@ -64,6 +68,8 @@ class V1 extends API {
 						'Limit' => 1
 					));
 					
+					error_log("Made it here 4");
+					
 					if(empty($storeData)) {
 						error_log("Unable to get Store data");
 						die();
@@ -71,7 +77,11 @@ class V1 extends API {
 					
 					$storeEsl = $storeData[0]['esl'];
 					
+					error_log("storeEsl: " . $storeEsl);
+					
 					$output = $this->placeBid($deliveryId, $storeEsl);
+					
+					error_log("output: " . $output);
 					
 					if(strcasecmp(trim($output), "received") != 0) {
 						error_log("Unable to send bid to store");
