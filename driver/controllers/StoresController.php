@@ -16,6 +16,8 @@ class StoresController extends Controller {
 		if(!empty($_POST)) {
 			// Add a new user
 			$data['name'] = $_POST['name'];
+			$data['lat'] = $_POST['lat'];
+			$data['lng'] = $_POST['lng'];
 			$data['esl'] = $_POST['esl'];
 			
 			$storesModel = new StoresModel();
@@ -29,5 +31,15 @@ class StoresController extends Controller {
 			Core::setFlash("Failed to add store");
 			$this->setVar('data', $data);
 		}
+	}
+	
+	public function delete($id) {
+		if(!empty($id)) {
+			$storesModel = new StoresModel();
+			$storesModel->delete($id);
+		}
+		
+		header("Location: " . ROOT . DS . 'stores');
+		die();
 	}
 }

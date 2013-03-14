@@ -76,6 +76,14 @@ class Model {
 		return $this->database->update($query);
 	}
 	
+	public function delete($id) {
+		$table = $this->getName();
+		
+		$query = "DELETE FROM $table WHERE id = '$id'";
+		
+		return $this->database->query($query);
+	}
+	
 	public function query($query) {
 		return $this->database->query($query);
 	}
