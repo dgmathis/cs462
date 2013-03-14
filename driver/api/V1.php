@@ -24,16 +24,19 @@ class V1 extends API {
 	}
 	
 	public function receive_bid_reply() {
+		$settingsModel = $this->getModel('Settings');
+		
+		$deliveryId = $settingsModel->getValue('last_delivery_id');
+		
 		error_log("Received Bid Reply...");
-		error_log("Delivery Id: " . $_SESSION['delivery_id']);
+		error_log("Delivery Id: " . $deliveryId);
 		error_log(json_encode($_POST));
 		
 		if(!empty($_POST)) {
 			$body = !empty($_POST['body']) ? $_POST['body'] : '';
 			
 			if(strcasecmp(trim($body), 'Bid anyway') == 0) {
-				if(isset($_SESSION['delivery_id'])){
-					$deliveryId = $_SESSION['delivery_id'];
+				if(!empty($deliveryId)){
 					
 					$deliverysModel = $this->getModel('Deliverys');
 					
@@ -164,7 +167,8 @@ class V1 extends API {
 
 			$client = new Services_Twilio($AccountSid, $AuthToken);
 			
-			$_SESSION['delivery_id'] = $deliveryId;
+			$settingsModel = $this->getModel('Settings');
+			$settingsModel->setValue('last_delivery_id', $deliveryId);
 			
 			$sms = $client->account->sms_messages->create(
 				"+14355038056", 
