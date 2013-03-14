@@ -28,7 +28,49 @@ class V1 extends API {
 			$body = !empty($_POST['body']) ? $_POST['body'] : '';
 			
 			if(strcasecmp(trim($body), 'Bid anyway') == 0) {
-				
+				if(isset($_SESSION['delivery_id'])){
+					$deliveryId = $_SESSION['delivery_id'];
+					
+					$deliverysModel = $this->getModel('Deliverys');
+					
+					$deliveryData = $deliverysModel->select(array(
+						'Conditions' => "id = '$deliveryId'",
+						'Limit' => 1
+					));
+					
+					if(empty($deliveryData)) {
+						error_log("Unable to get Delivery data");
+						die();
+					}
+					
+					$storeId = $deliveryData[0]['store_id'];
+					
+					if(empty($storeId)) {
+						error_log("Unable to get StoreId");
+						die();
+					}
+					
+					$storesModel = $this->getModel('Stores');
+					
+					$storeData = $storesModel->select(array(
+						'Conditions' => "id = '$storeId'",
+						'Limit' => 1
+					));
+					
+					if(empty($storeData)) {
+						error_log("Unable to get Store data");
+						die();
+					}
+					
+					$storeEsl = $storeData[0]['esl'];
+					
+					$output = $this->placeBid($deliveryId, $storeEsl);
+					
+					if(strcasecmp(trim($output), "received") != 0) {
+						error_log("Unable to send bid to store");
+						die();
+					}
+				}
 			}
 		}
 		die();
@@ -54,10 +96,7 @@ class V1 extends API {
 	}
 	
 	public function rqf_delivery_ready() {
-		$settingsModel = $this->getModel('Settings');
-			
-		$settingsModel->setValue('event_received', json_encode($_POST));
-		
+
 		if(!empty($_POST)) {
 			
 			$storeEsl = $_POST['store_esl'];
@@ -102,24 +141,9 @@ class V1 extends API {
 			
 			if($this->isInRange($storeData[0])) {
 
-				$ch = curl_init();
-
-				$bid['_domain'] = 'rqf';
-				$bid['_name'] = 'bid_available';
-				$bid['delivery_id'] = $deliveryId;
-				$bid['driver_esl'] = DRIVER_ESL;
-				$bid['driver_name'] = $settingsModel->getValue('firstname') . ' ' . $settingsModel->getValue(lastname);
-				$bid['est_delivery_time'] = "20 min";
-				
-				curl_setopt($ch, CURLOPT_URL, $storeEsl);
-				curl_setopt($ch, CURLOPT_POST, 1);
-				curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($bid));
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-				$output = curl_exec($ch);
+				$output = $this->placeBid($deliveryId, $storeEsl);
 				
 				if(strcasecmp(trim($output), "received") != 0) {
-					print($output . "<br />");
 					print("Unable to send bid to store");
 					die();
 				}
@@ -136,19 +160,41 @@ class V1 extends API {
 
 			$client = new Services_Twilio($AccountSid, $AuthToken);
 			
+			$_SESSION['delivery_id'] = $deliveryId;
+			
 			$sms = $client->account->sms_messages->create(
 				"+14355038056", 
 				"+18014711664",
 				$message
 			);
 
-			error_log("SMS: " . json_encode($sms));
-			
 			print('received');
 			die();
 		}
 	}
 	
+	
+	private function placeBid($deliveryId, $storeEsl) {
+		$settingsModel = $this->getModel('Settings');
+		
+		$ch = curl_init();
+		
+		$bid['_domain'] = 'rqf';
+		$bid['_name'] = 'bid_available';
+		$bid['delivery_id'] = $deliveryId;
+		$bid['driver_esl'] = DRIVER_ESL;
+		$bid['driver_name'] = $settingsModel->getValue('firstname') . ' ' . $settingsModel->getValue(lastname);
+		$bid['est_delivery_time'] = "20 min";
+
+		curl_setopt($ch, CURLOPT_URL, $storeEsl);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($bid));
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		
+		$output = curl_exec($ch);
+		
+		return $output;
+	}
 	private function isInRange($storeData) {
 
 		if(empty($storeData)) {
@@ -160,10 +206,17 @@ class V1 extends API {
 		
 		$settingsModel = $this->getModel('Settings');
 		
-		$lat2 = $settingsModel->getValue('last_checkin_lat');
-		$lng2 = $settingsModel->getValue('last_checkin_lng');
+		$lastCheckin = $settingsModel->getValue('last_checkin');
+		
+		if(!empty($lastCheckin)) {
+			$lastCheckin = json_decode($lastCheckin, true);
+			
+			$lat2 = $lastCheckin['lat'];
+			$lng2 = $lastCheckin['lng'];
+		}
 		
 		if(empty($lat1) || empty($lng1) || empty($lat2) || empty($lng2)) {
+			error_log("Couldn't get all lat-lngs");
 			return false;
 		}
 		
@@ -172,7 +225,7 @@ class V1 extends API {
 		return ($distance < 20);
 	}
 	
-	function distance($lat1, $lng1, $lat2, $lng2, $miles = true)
+	private function distance($lat1, $lng1, $lat2, $lng2, $miles = true)
 	{
 		$pi80 = M_PI / 180;
 		$lat1 *= $pi80;
