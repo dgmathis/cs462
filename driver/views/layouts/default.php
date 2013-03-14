@@ -31,19 +31,12 @@ if(isset($_SESSION['user'])) {
 		<div class="navbar navbar-inverse navbar-fixed-top">
 			<div class="navbar-inner">
 				<div class="container">
-					<a class="brand" href="<?php echo ROOT; ?>">Flower Frenzy</a>
+					<a class="brand" href="<?php echo ROOT; ?>">Driver Frenzy</a>
 					<ul class="nav">
 						<li>
-							<a href="<?php echo ROOT . '/admin'; ?>">Admin</a>
-						</li>
-						<li>
-							<a href="<?php echo ROOT . '/users'; ?>">Drivers</a>
+							<a href="<?php echo ROOT . '/stores'; ?>">Stores</a>
 						</li>
 					</ul>
-					<p class="navbar-text pull-right">
-						<?php if(!empty($username)): ?><a href="<?php echo $userUrl; ?>"><?php echo $username; ?></a> | <?php endif; ?>
-						<a href="<?php echo $loginUrl; ?>"><?php echo $loginStatus; ?></a> 
-					</p>
 				</div>
 			</div>
 		</div>

@@ -2,7 +2,7 @@
 
 class AdminController extends Controller {
 
-	var $models = array('Admin', 'Users');
+	var $models = array('Admin', 'Users', 'Deliverys');
 	var $layout = 'admin';
 	
 	public function before() {
@@ -18,38 +18,45 @@ class AdminController extends Controller {
 			'Conditions' => "esl IS NOT NULL"
 		));
 		
+		$deliverysModel = new DeliverysModel();
+		
+		$deliverys = $deliverysModel->select();
+		
 		$this->setVar('availableUsers', $availableUsers);
+		$this->setVar('deliverys', $deliverys);
 	}
 	
 	public function request_delivery() {
 		if(!empty($_POST)) {
+	
+			$data['pickup_time'] = $_POST['pickup_time'];
+			$data['pickup_address'] = $_POST['pickup_address'];
+			$data['delivery_time'] = $_POST['delivery_time'];
+			$data['delivery_address'] = $_POST['delivery_address'];
+			$data['status'] = 'waiting for bids';
 			
-			// Hack
-			if(isset($_POST['hour']))
-				unset($_POST['hour']);
+			$deliverysModel = new DeliverysModel();
 			
-			if(isset($_POST['minute']))
-				unset($_POST['minute']);
-			
-			if(isset($_POST['meridian']))
-				unset($_POST['meridian']);
-			
-			$event['_domain'] = 'rqf';
-			$event['_name'] = 'delivery_ready';
-			$event['_timestamp'] = time();
-			
-			foreach($_POST as $key => $value) {
-				$event[$key] = $value;
-			}
-			
-			$userModel = new UsersModel();
-			
-			$availableUsers = $userModel->select(array(
-				'Conditions' => "esl IS NOT NULL"
-			));
-			
-			foreach($availableUsers as $user) {
-				$this->send_request($user, $event);
+			if($deliverysModel->insert($data)) {
+				$event['_domain'] = 'rqf';
+				$event['_name'] = 'delivery_ready';
+				$event['_timestamp'] = time();
+				$event['store_esl'] = STORE_ESL;
+				$event['delivery_id'] = $deliverysModel->getLastInsertId();
+				
+				foreach($data as $key => $value) {
+					$event[$key] = $value;
+				}
+
+				$userModel = new UsersModel();
+
+				$availableUsers = $userModel->select(array(
+					'Conditions' => "esl IS NOT NULL"
+				));
+
+				foreach($availableUsers as $user) {
+					$this->send_request($user, $event);
+				}
 			}
 		}
 	}
@@ -71,9 +78,11 @@ class AdminController extends Controller {
 
 		curl_close ($ch);
 		
-		if($server_output == 'received') {
+		if(strcasecmp(trim($server_output), "received") == 0) {
 			header('location: ' . ROOT . '/admin');
 		} else {
+			print($server_output);
+			die();
 			$message = 'Failed to send request';
 			$this->setVar('message', $message);
 		}

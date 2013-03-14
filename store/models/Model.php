@@ -82,4 +82,8 @@ class Model {
 		return $this->name;
 	}
 	
+	public function getLastInsertId() {
+		return $this->database->getLastInsertId();
+	}
+	
 }

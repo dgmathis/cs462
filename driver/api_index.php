@@ -3,6 +3,7 @@
 
 define('DS', '/');
 define('ROOT', DS . 'cs462' . DS . basename(dirname(__FILE__)));
+define('DRIVER_ESL', 'http://' . $_SERVER['SERVER_NAME'] . ROOT . DS . 'api' . DS . 'v1' . DS . 'receive_event');
 
 require 'api' . DS . 'API.php';
 require 'models' . DS . 'Model.php';

@@ -18,16 +18,15 @@ class Router {
 			$url = explode('/', $_GET['url']);
 			
 			$count = count($url);
+
+			if($count > 0) {
+				$this->controller = ucwords($url[0]);
+				$start = 1;
+			}
 			
 			if($count > 1) {
-				$this->controller = ucwords($url[0]);
 				$this->action = $url[1];
 				$start = 2;
-			} else if($count > 0) {
-				$this->action = $url[0];
-				$start = 1;
-			} else {
-				$start = 0;
 			}
 			
 			for($i = $start; $i < $count; $i++) {

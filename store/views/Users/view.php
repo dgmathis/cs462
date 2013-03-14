@@ -2,7 +2,7 @@
 <h3><?php echo $user['firstname'] . ' ' . $user['lastname']; ?></h3>
 
 <?php if(!empty($user['esl'])): ?>
-<p>Event Signal URL: <?php echo $user['esl']; ?></p>
+<p>ESL: <?php echo $user['esl']; ?></p>
 <?php endif; ?>
 
 <?php if(!empty($checkins)): ?>
@@ -34,6 +34,6 @@
 <?php endif; ?>
 
 <?php if($allowRegisterESL): ?>
-<a class="btn btn-primary" href="<?php echo ROOT; ?>/users/register_esl"><?php echo empty($user['esl']) ? 'Register' : 'Re-register'; ?> your event signal URL</a>
+<a class="btn btn-primary" href="<?php echo ROOT; ?>/users/register_esl"><?php echo empty($user['esl']) ? 'Register' : 'Re-register'; ?> your ESL</a>
 <?php endif; ?>
 

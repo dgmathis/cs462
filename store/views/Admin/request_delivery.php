@@ -10,7 +10,7 @@
 <form method="POST" action="">
 	<div>
 		<label>Shop Address</label>
-		<input type="text" name="shop_address" />
+		<input type="text" name="pickup_address" />
 	</div>
 	<div class="input-append bootstrap-timepicker">
 		<label>Pickup Time</label>
