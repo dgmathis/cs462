@@ -24,7 +24,13 @@ class V1 extends API {
 	}
 	
 	public function receive_bid_reply() {
-		error_log(json_encode($_POST));
+		if(!empty($_POST)) {
+			$body = !empty($_POST['body']) ? $_POST['body'] : '';
+			
+			if(strcasecmp(trim($body), 'Bid anyway') == 0) {
+				
+			}
+		}
 		die();
 	}
 	
@@ -136,6 +142,8 @@ class V1 extends API {
 				$message
 			);
 
+			error_log("SMS: " . json_encode($sms));
+			
 			print('received');
 			die();
 		}
