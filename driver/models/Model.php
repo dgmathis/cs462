@@ -72,9 +72,7 @@ class Model {
 		$query = rtrim($query, ',');
 		
 		$query .= " WHERE $table.id='$id';";
-		
-		error_log("query: " . $query);
-		
+
 		return $this->database->update($query);
 	}
 	

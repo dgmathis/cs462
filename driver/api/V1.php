@@ -24,6 +24,10 @@ class V1 extends API {
 	}
 	
 	public function receive_bid_reply() {
+		error_log("Received Bid Reply...");
+		error_log("Delivery Id: " . $_SESSION['delivery_id']);
+		error_log(json_encode($_POST));
+		
 		if(!empty($_POST)) {
 			$body = !empty($_POST['body']) ? $_POST['body'] : '';
 			
@@ -183,7 +187,7 @@ class V1 extends API {
 		$bid['_name'] = 'bid_available';
 		$bid['delivery_id'] = $deliveryId;
 		$bid['driver_esl'] = DRIVER_ESL;
-		$bid['driver_name'] = $settingsModel->getValue('firstname') . ' ' . $settingsModel->getValue(lastname);
+		$bid['driver_name'] = $settingsModel->getValue('firstname') . ' ' . $settingsModel->getValue('lastname');
 		$bid['est_delivery_time'] = "20 min";
 
 		curl_setopt($ch, CURLOPT_URL, $storeEsl);
