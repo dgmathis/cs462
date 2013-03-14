@@ -29,7 +29,9 @@ class V1 extends API {
 		$deliveryId = $settingsModel->getValue('last_delivery_id');
 		
 		if(!empty($_POST)) {
-			$body = !empty($_POST['body']) ? $_POST['body'] : '';
+			
+			
+			$body = !empty($_POST['Body']) ? $_POST['Body'] : '';
 			
 			error_log("Body: " . $body);
 			
