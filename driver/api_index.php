@@ -1,6 +1,10 @@
 
 <?php
 
+session_start();
+
+date_default_timezone_set('America/Denver');
+
 define('DS', '/');
 define('ROOT', DS . 'cs462' . DS . basename(dirname(__FILE__)));
 define('DRIVER_ESL', 'http://' . $_SERVER['SERVER_NAME'] . ROOT . DS . 'api' . DS . 'v1' . DS . 'receive_event');
