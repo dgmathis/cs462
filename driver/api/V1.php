@@ -24,7 +24,7 @@ class V1 extends API {
 	}
 	
 	public function receive_bid_reply() {
-		error_log($_POST);
+		error_log(json_encode($_POST));
 		die();
 	}
 	
