@@ -28,18 +28,11 @@ class V1 extends API {
 		
 		$deliveryId = $settingsModel->getValue('last_delivery_id');
 		
-		if(!empty($_POST)) {
-			
-			
+		if(!empty($_POST)) {		
 			$body = !empty($_POST['Body']) ? $_POST['Body'] : '';
-			
-			error_log("Body: " . $body);
-			
+
 			if(strcasecmp(trim($body), 'Bid anyway') == 0) {
 				if(!empty($deliveryId)){
-					
-					error_log("Made it here 1");
-					
 					$deliverysModel = $this->getModel('Deliverys');
 					
 					$deliveryData = $deliverysModel->select(array(
@@ -51,9 +44,7 @@ class V1 extends API {
 						error_log("Unable to get Delivery data");
 						die();
 					}
-					
-					error_log("Made it here 2");
-					
+
 					$storeId = $deliveryData[0]['store_id'];
 					
 					if(empty($storeId)) {
@@ -61,30 +52,22 @@ class V1 extends API {
 						die();
 					}
 					
-					error_log("Made it here 3");
-					
 					$storesModel = $this->getModel('Stores');
 					
 					$storeData = $storesModel->select(array(
 						'Conditions' => "id = '$storeId'",
 						'Limit' => 1
 					));
-					
-					error_log("Made it here 4");
-					
+
 					if(empty($storeData)) {
 						error_log("Unable to get Store data");
 						die();
 					}
 					
 					$storeEsl = $storeData[0]['esl'];
-					
-					error_log("storeEsl: " . $storeEsl);
-					
+
 					$output = $this->placeBid($deliveryId, $storeEsl);
-					
-					error_log("output: " . $output);
-					
+
 					if(strcasecmp(trim($output), "received") != 0) {
 						error_log("Unable to send bid to store");
 						die();
@@ -212,6 +195,19 @@ class V1 extends API {
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		
 		$output = curl_exec($ch);
+		
+		$deliveryModel = $this->getModel('Deliverys');
+		$deliveryData = $deliveryModel->select(array(
+			'Conditions' => "ext_delivery_id = '$deliveryId'",
+			'Limit' => 1
+		));
+		
+		if(!empty($deliveryData)) {
+			$data['id'] = $deliveryData[0]['id'];
+			$data['status'] = 'Bid placed';
+			
+			$deliveryModel->update($data);
+		}
 		
 		return $output;
 	}
