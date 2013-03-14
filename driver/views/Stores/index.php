@@ -5,6 +5,8 @@
 		<thead>
 			<tr>
 				<th>Name</th>
+				<th>lat</th>
+				<th>lng</th>
 				<th>esl</th>
 			</tr>
 		</thead>
@@ -12,6 +14,8 @@
 			<?php foreach($stores as $store): ?>
 			<tr>
 				<td><?php echo $store['name']; ?>
+				<td><?php echo $store['lat']; ?>
+				<td><?php echo $store['lng']; ?>
 				<td><?php echo $store['esl']; ?>
 			</tr>
 			<?php endforeach; ?>

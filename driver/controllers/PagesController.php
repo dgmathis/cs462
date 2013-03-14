@@ -16,6 +16,7 @@ class PagesController extends Controller {
 		
 		$data['firstname'] = $settingsModel->getValue('firstname');
 		$data['lastname'] = $settingsModel->getValue('lastname');
+		$data['phonenumber'] = $settingsModel->getValue('driver_phone_number');
 		
 		$lastCheckin = $settingsModel->getValue('last_checkin');
 		if(!empty($lastCheckin)) {
@@ -31,6 +32,22 @@ class PagesController extends Controller {
 		$deliverys = $deliverysModel->select();
 		
 		$this->setVar('deliverys', $deliverys);
+	}
+	
+	public function update_phone() {
+		if(!empty($_POST)) {
+			$settingsModel = new SettingsModel();
+			
+			$phone = $_POST['phone_number'];
+			
+			if(!empty($phone)) {
+				$phone = '+' . str_replace(array('-', ' '), '', $phone);
+				
+				$settingsModel->setValue('driver_phone_number', $phone);
+				
+				header('Location: ' . ROOT . DS);
+			}
+		}
 	}
 	
 	public function create_account() {

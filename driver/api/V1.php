@@ -155,27 +155,40 @@ class V1 extends API {
 				$message = "Bid Request \nPickup: " . $data['pickup_time'] . " @ " . $data['pickup_address'] . " \nDelivery: " . $data['delivery_time'] . " @ " . $data['delivery_address'];
 			}
 			
-			require "tools/Services/Twilio.php";
-
-			$AccountSid = "AC7d9ec8056fd385de4aa18fae44465175";
-			$AuthToken = "af482ee0a457ff774cc55b9ce50a26cb";
-
-			$client = new Services_Twilio($AccountSid, $AuthToken);
+			
+			$this->sendSMSMessage($message);
 			
 			$settingsModel = $this->getModel('Settings');
 			$settingsModel->setValue('last_delivery_id', $deliveryId);
-			
-			$sms = $client->account->sms_messages->create(
-				"+14355038056", 
-				"+18014711664",
-				$message
-			);
 
 			print('received');
 			die();
 		}
 	}
 	
+	private function sendSMSMessage($message) {
+		
+		$settingsModel = $this->getModel('Settings');
+		$number = $settingsModel->getValue('driver_phone_number');
+		
+		if(empty($number)) {
+			return;
+		}
+		
+		require "tools/Services/Twilio.php";
+
+		$AccountSid = "AC7d9ec8056fd385de4aa18fae44465175";
+		$AuthToken = "af482ee0a457ff774cc55b9ce50a26cb";
+
+		$client = new Services_Twilio($AccountSid, $AuthToken);
+		
+		
+		$sms = $client->account->sms_messages->create(
+			"+14355038056", 
+			$number,
+			$message
+		);
+	}
 	
 	private function placeBid($deliveryId, $storeEsl) {
 		$settingsModel = $this->getModel('Settings');

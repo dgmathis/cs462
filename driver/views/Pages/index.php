@@ -24,12 +24,17 @@
 </div>
 <?php endif; ?>
 
-<?php if(empty($data['fs_access_token'])): ?>
-<a class="btn btn-primary" href="<?php echo ROOT . DS . 'settings' . DS . 'auth_foursquare'; ?>">Authenticate with Foursquare</a>
-<?php else: ?>
-<h4>Foursquare Access Token</h4>
-<p><?php echo $data['fs_access_token']; ?></p>
-<?php endif; ?>
+<div>
+	<h4>Foursquare Access Token</h4>
+	<p><?php echo !empty($data['fs_access_token']) ? $data['fs_access_token'] : ''; ?></p>
+	<a class="btn btn-primary" href="<?php echo ROOT . DS . 'settings' . DS . 'auth_foursquare'; ?>">Authenticate with Foursquare</a>
+</div>
+
+<div>
+	<h4>Phone Number</h4>
+	<p><?php echo isset($data['phonenumber']) ? $data['phonenumber'] : ''; ?></p>
+	<a class="btn btn-primary" href="<?php echo ROOT . DS . 'pages' . DS . 'update_phone'; ?>">Update number</a>
+</div>
 
 <?php if(!empty($deliverys)): ?>
 <h4>Delivery Requests</h4>
