@@ -1,4 +1,4 @@
-
+<a class="btn btn-primary pull-right" href="<?php echo ROOT . DS . 'stores' . DS . 'edit' . DS . $store['id']; ?>">Edit Store</a>
 <h3><?php echo $store['name']; ?></h3>
 <table class="table table-bordered table-striped">
 		<tr>
