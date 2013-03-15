@@ -67,6 +67,7 @@ class AdminController extends Controller {
 		$event['driver_firstname'] = $user['firstname'];
 		$event['drivet_lastname'] = $user['lastname'];
 		
+		error_log("ESL: " . $esl);
 		
 		$ch = curl_init();
 		

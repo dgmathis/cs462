@@ -33,6 +33,40 @@ class StoresController extends Controller {
 		}
 	}
 	
+	public function edit($id) {
+
+		$storesModel = new StoresModel();
+		
+		if(!empty($_POST)) {
+			$store['id'] = $id;
+			$store['name'] = $_POST['name'];
+			$store['lat'] = $_POST['lat'];
+			$store['lng'] = $_POST['lng'];
+			$store['esl'] = $_POST['esl'];
+			
+			if($storesModel->update($store)) {
+				header('location: ' . ROOT . DS . 'stores' . DS . view . DS . $id);
+				die();
+			}
+			
+			$this->setVar('store', $store);
+		} else {
+
+			$storeData = $storesModel->select(array(
+				'Conditions' => "id = '$id'",
+				'Limit' => 1
+			));
+			
+			if(empty($storeData)) {
+				Core::setFlash('Sorry, but that driver does not exist');
+				header('location: ' . ROOT . DS . 'users');
+				die();
+			}
+			
+			$this->setVar('store', $storeData[0]);
+		}
+	}
+	
 	public function view($id) {
 		if(empty($id)) {
 			Core::setFlash("Sorry, but that store doesn't exist");

@@ -15,7 +15,8 @@
 				<td><?php echo $store['name']; ?></td>
 				<td><?php echo DRIVER_ESL . DS . $store['id']; ?></td>
 				<td>
-					<a href="<?php echo ROOT . DS . 'stores' . DS . 'view' . DS . $store['id']; ?>">View</a> |
+					<a href="<?php echo ROOT . DS . 'stores' . DS . 'view' . DS . $store['id']; ?>">View</a> | 
+					<a href="<?php echo ROOT . DS . 'stores' . DS . 'edit' . DS . $store['id']; ?>">Edit</a> | 
 					<a href="<?php echo ROOT . DS . 'stores' . DS . 'delete' . DS . $store['id']; ?>">Delete</a>
 				</td>
 			</tr>
