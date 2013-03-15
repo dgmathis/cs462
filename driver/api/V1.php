@@ -65,6 +65,7 @@ class V1 extends API {
 	}
 	
 	public function receive_event($id) {
+		
 		if(!empty($_POST)) {
 			$domain = $_POST['_domain'];
 			$eventName = $_POST['_name'];
@@ -84,7 +85,7 @@ class V1 extends API {
 	}
 	
 	public function rqf_delivery_ready($id) {
-
+		
 		if(!empty($_POST)) {
 			
 			$deliveryId = $_POST['delivery_id'];
@@ -170,6 +171,7 @@ class V1 extends API {
 	}
 	
 	private function placeBid($deliveryId, $storeId) {
+		
 		$settingsModel = $this->getModel('Settings');
 		
 		$bid['_domain'] = 'rqf';

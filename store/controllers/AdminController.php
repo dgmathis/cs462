@@ -67,8 +67,9 @@ class AdminController extends Controller {
 		$event['driver_firstname'] = $user['firstname'];
 		$event['drivet_lastname'] = $user['lastname'];
 		
+		
 		$ch = curl_init();
-
+		
 		curl_setopt($ch, CURLOPT_URL, $esl);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($event));

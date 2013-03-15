@@ -1,7 +1,5 @@
 <h3><?php echo $data['firstname'] . ' ' . $data['lastname']; ?></h3>
 
-<h4>Driver ESL</h4>
-<p><?php echo DRIVER_ESL; ?></p>
 <?php if(!empty($data['last_checkin'])): ?>
 <h4>Last Checkin</h4>
 <div>
