@@ -30,7 +30,7 @@ class UsersController extends Controller {
 			$result = $userModel->addUser($data);
 			
 			if($result['code'] == 0) {
-				$this->setVar('message', $result['message']);
+				Core::setFlash($result['message']);
 			}
 			
 			$user = $userModel->select(array(
@@ -47,6 +47,51 @@ class UsersController extends Controller {
 			}
 			
 			$this->setVar('data', $data);
+		}
+	}
+	
+	public function edit($id) {
+		if(!isset($_SESSION['user']) || $_SESSION['user']['id'] != $id) {
+			Core::setFlash('You do not have permission to edit that driver');
+			header('location: ' . ROOT . DS . 'users');
+			die();
+		}
+		
+		if(!empty($_POST)) {
+			$user['id'] = $id;
+			$user['username'] = $_POST['username'];
+			$user['password'] = $_POST['password'];
+			$user['firstname'] = $_POST['firstname'];
+			$user['lastname'] = $_POST['lastname'];
+			$user['esl'] = $_POST['esl'];
+			
+			$userModel = new UsersModel();
+			
+			$result = $userModel->updateUser($user);
+			
+			Core::setFlash($result['message']);
+			
+			if($result['code'] == 1) {
+				header('location: ' . ROOT . DS . 'users' . DS . view . DS . $id);
+				die();
+			}
+			
+			$this->setVar('user', $user);
+		} else {
+			$userModel = new UsersModel();
+			
+			$userData = $userModel->select(array(
+				'Conditions' => "id = '$id'",
+				'Limit' => 1
+			));
+			
+			if(empty($userData)) {
+				Core::setFlash('Sorry, but that driver does not exist');
+				header('location: ' . ROOT . DS . 'users');
+				die();
+			}
+			
+			$this->setVar('user', $userData[0]);
 		}
 	}
 	
@@ -89,6 +134,16 @@ class UsersController extends Controller {
 		$this->setVar('allowFSAuth', $allowFSAuth);
 		$this->setVar('user', $user[0]);
 		$this->setVar('checkins', $checkins);
+	}
+	
+	public function delete($id) {
+		if(!empty($id)) {
+			$userModel = new UsersModel();
+			$userModel->delete($id);
+		}
+		
+		header("Location: " . ROOT . DS . 'users');
+		die();
 	}
 	
 	public function auth_foursquare() {
@@ -147,7 +202,7 @@ class UsersController extends Controller {
 			));
 			
 			if(empty($user) || empty($user[0])) {
-				$this->setVar('message', 'Incorrect username or password');
+				Core::setFlash('Incorrect username or password');
 			} else {
 				$_SESSION['user'] = $user[0];
 				

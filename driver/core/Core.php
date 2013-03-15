@@ -10,7 +10,6 @@ class Core {
 	
 	public function run($_controller, $_action, $parameters) {
 		
-		
 		$this->handleFlash();
 		
 		// Create Controller

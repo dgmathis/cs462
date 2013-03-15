@@ -1,8 +1,12 @@
-
+<a class="btn btn-primary pull-right" href="<?php echo ROOT . DS . 'users' . DS . 'edit' . DS . $user['id']; ?>">Edit User</a>
 <h3><?php echo $user['firstname'] . ' ' . $user['lastname']; ?></h3>
 
+<h4>Store ESL For This Driver</h4>
+<p><?php echo STORE_ESL . DS . $user['id']; ?></p>
+
 <?php if(!empty($user['esl'])): ?>
-<p>ESL: <?php echo $user['esl']; ?></p>
+<h4>Driver ESL</h4>
+<p><?php echo $user['esl']; ?></p>
 <?php endif; ?>
 
 <?php if(!empty($checkins)): ?>

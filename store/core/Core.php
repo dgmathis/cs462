@@ -6,7 +6,11 @@ include 'models/Model.php';
 
 class Core {
 	
+	private static $flash;
+	
 	public function run($_controller, $_action, $parameters) {
+		
+		$this->handleFlash();
 		
 		// Create Controller
 		$controller = $this->getControllerObject($_controller);
@@ -88,5 +92,25 @@ class Core {
 		$layout = $controller->getLayout();
 		
 		include 'views' . DS . 'layouts' . DS . $layout . '.php';
+	}
+	
+	public static function setFlash($message) {
+		$_SESSION['flash'] = $message;
+		self::$flash = $message;
+	}
+	
+	public static function getFlash() {
+		if(!empty(self::$flash)) {
+			print('<div class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' . self::$flash . '</div>'); 
+		}
+	}
+	
+	private static function handleFlash() {
+		if(isset($_SESSION['flash'])) {
+			self::$flash = $_SESSION['flash'];
+			unset($_SESSION['flash']);
+		} else {
+			self::$flash = '';
+		}
 	}
 }

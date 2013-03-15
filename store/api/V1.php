@@ -2,7 +2,7 @@
 
 class V1 extends API {
 	
-	public function receive_event() {
+	public function receive_event($id) {
 		if(!empty($_POST)) {
 			$domain = $_POST['_domain'];
 			$eventName = $_POST['_name'];
@@ -10,7 +10,7 @@ class V1 extends API {
 			$function = $domain . '_' . $eventName;
 			
 			if(method_exists($this, $function)){
-				$this->$function();
+				call_user_func_array(array($this, $function), array($id));
 			} else {
 				print($function . ' does not exist');
 				die();
@@ -21,13 +21,11 @@ class V1 extends API {
 		die();
 	}
 	
-	public function rqf_bid_available() {
+	public function rqf_bid_available($id) {
 		
 		if(!empty($_POST)) {
-			$driverEsl = $_POST['driver_esl'];
-			
-			if(empty($driverEsl)) {
-				print('Please provide a driver ESL');
+			if(empty($id)) {
+				print('Please provide a driver Id');
 				die();
 			}
 			
@@ -41,18 +39,17 @@ class V1 extends API {
 			$usersModel = $this->getModel('Users');
 			
 			$userData = $usersModel->select(array(
-				'Conditions' => "esl = '$driverEsl'",
+				'Conditions' => "id = '$id'",
 				'Limit' => 1
 			));
 			
 			if(empty($userData) || empty($userData[0])) {
-				print('Failed to retreive user data');
+				print('Failed to retreive driver data');
 				die();
 			}
 			
 			// update bid
-			$userId = $userData[0]['id'];
-			$data['user_id'] = $userId;
+			$data['user_id'] = $id;
 			$data['delivery_id'] = $deliveryId;
 			$data['est_delivery_time'] = $_POST['est_delivery_time'];
 			$bidsModel = $this->getModel('Bids');

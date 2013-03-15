@@ -33,6 +33,28 @@ class StoresController extends Controller {
 		}
 	}
 	
+	public function view($id) {
+		if(empty($id)) {
+			Core::setFlash("Sorry, but that store doesn't exist");
+			header('Location: ' . ROOT . DS . 'stores');
+			die();
+		}
+		
+		$storesModel = new StoresModel();
+		$storeData = $storesModel->select(array(
+			'Conditions' => "id = '$id'",
+			'Limit' => 1
+		));
+		
+		if(empty($storeData)) {
+			Core::setFlash("Sorry, but that store doesn't exist");
+			header('Location: ' . ROOT . DS . 'stores');
+			die();
+		}
+		
+		$this->setVar('store', $storeData[0]);
+	}
+	
 	public function delete($id) {
 		if(!empty($id)) {
 			$storesModel = new StoresModel();

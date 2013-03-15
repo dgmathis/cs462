@@ -1,9 +1,4 @@
-<?php if(isset($message)): ?>
-<div class="alert">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  <?php echo $message; ?>
-</div>
-<?php endif; ?>
+<?php Core::getFlash(); ?>
 
 <h3>Driver Login</h3>
 

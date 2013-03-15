@@ -51,22 +51,8 @@ class V1 extends API {
 						error_log("Unable to get StoreId");
 						die();
 					}
-					
-					$storesModel = $this->getModel('Stores');
-					
-					$storeData = $storesModel->select(array(
-						'Conditions' => "id = '$storeId'",
-						'Limit' => 1
-					));
 
-					if(empty($storeData)) {
-						error_log("Unable to get Store data");
-						die();
-					}
-					
-					$storeEsl = $storeData[0]['esl'];
-
-					$output = $this->placeBid($deliveryId, $storeEsl);
+					$output = $this->placeBid($deliveryId, $storeId);
 
 					if(strcasecmp(trim($output), "received") != 0) {
 						error_log("Unable to send bid to store");
@@ -78,7 +64,7 @@ class V1 extends API {
 		die();
 	}
 	
-	public function receive_event() {
+	public function receive_event($id) {
 		if(!empty($_POST)) {
 			$domain = $_POST['_domain'];
 			$eventName = $_POST['_name'];
@@ -86,7 +72,7 @@ class V1 extends API {
 			$function = $domain . '_' . $eventName;
 			
 			if(method_exists($this, $function)){
-				$this->$function();
+				call_user_func_array(array($this, $function), array($id));
 			} else {
 				print($function . ' does not exist');
 				die();
@@ -97,16 +83,9 @@ class V1 extends API {
 		die();
 	}
 	
-	public function rqf_delivery_ready() {
+	public function rqf_delivery_ready($id) {
 
 		if(!empty($_POST)) {
-			
-			$storeEsl = $_POST['store_esl'];
-			
-			if(empty($storeEsl)) {
-				print("Please provide a store esl");
-				die();
-			}
 			
 			$deliveryId = $_POST['delivery_id'];
 			
@@ -118,7 +97,7 @@ class V1 extends API {
 			$storesModel = $this->getModel('Stores');
 			
 			$storeData = $storesModel->select(array(
-				'Conditions' => "esl = '$storeEsl'",
+				'Conditions' => "id = '$id'",
 				'Limit' => 1
 			));
 			
@@ -143,7 +122,7 @@ class V1 extends API {
 			
 			if($this->isInRange($storeData[0])) {
 
-				$output = $this->placeBid($deliveryId, $storeEsl);
+				$output = $this->placeBid($deliveryId, $storeId);
 				
 				if(strcasecmp(trim($output), "received") != 0) {
 					print("Unable to send bid to store");
@@ -190,18 +169,31 @@ class V1 extends API {
 		);
 	}
 	
-	private function placeBid($deliveryId, $storeEsl) {
+	private function placeBid($deliveryId, $storeId) {
 		$settingsModel = $this->getModel('Settings');
-		
-		$ch = curl_init();
 		
 		$bid['_domain'] = 'rqf';
 		$bid['_name'] = 'bid_available';
 		$bid['delivery_id'] = $deliveryId;
-		$bid['driver_esl'] = DRIVER_ESL;
 		$bid['driver_name'] = $settingsModel->getValue('firstname') . ' ' . $settingsModel->getValue('lastname');
 		$bid['est_delivery_time'] = "20 min";
 
+		$storesModel = $this->getModel('Stores');
+		
+		$storeData = $storesModel->select(array(
+			'Conditions' => "id = '$storeId'",
+			'Limit' => 1,
+			'Fields' => 'esl'
+		));
+		
+		if(empty($storeData)) {
+			return 'Failed to get store data';
+		}
+		
+		$storeEsl = $storeData[0]['esl'];
+		
+		$ch = curl_init();
+		
 		curl_setopt($ch, CURLOPT_URL, $storeEsl);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($bid));

@@ -5,9 +5,7 @@
 		<thead>
 			<tr>
 				<th>Name</th>
-				<th>lat</th>
-				<th>lng</th>
-				<th>esl</th>
+				<th>Driver ESL For This Store</th>
 				<th>Action</th>
 			</tr>
 		</thead>
@@ -15,10 +13,11 @@
 			<?php foreach($stores as $store): ?>
 			<tr>
 				<td><?php echo $store['name']; ?></td>
-				<td><?php echo $store['lat']; ?></td>
-				<td><?php echo $store['lng']; ?></td>
-				<td><?php echo $store['esl']; ?></td>
-				<td><a href="<?php echo ROOT . DS . 'stores' . DS . 'delete' . DS . $store['id']; ?>">Delete</a></td>
+				<td><?php echo DRIVER_ESL . DS . $store['id']; ?></td>
+				<td>
+					<a href="<?php echo ROOT . DS . 'stores' . DS . 'view' . DS . $store['id']; ?>">View</a> |
+					<a href="<?php echo ROOT . DS . 'stores' . DS . 'delete' . DS . $store['id']; ?>">Delete</a>
+				</td>
 			</tr>
 			<?php endforeach; ?>
 		</tbody>
