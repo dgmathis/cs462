@@ -2,6 +2,10 @@
 
 class V1 extends API {
 	
+	public function test($id) {
+		print($id);die();
+	}
+	
 	public function receive_event($id) {
 		if(!empty($_POST)) {
 			$domain = $_POST['_domain'];

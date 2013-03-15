@@ -1,4 +1,3 @@
-
 <?php
 
 session_start();
@@ -15,7 +14,7 @@ require 'core' . DS . 'Database.php';
 
 $version = $_GET['version'];
 $action = $_GET['action'];
-$params = (!empty($_GET['params'])) ? explode($_GET['params']) : array();
+$params = (!empty($_GET['params'])) ? explode('/', $_GET['params']) : array();
 
 $class = "V$version";
 $filename = "api" . DS . $class . '.php';
