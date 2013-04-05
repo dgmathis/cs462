@@ -12,7 +12,7 @@ class V1 extends API {
 			'Conditions' => "date >= '$curTime'"
 		));
 		
-		print $activities;
+		print json_encode($activities);
 		die();
 	}
 }
