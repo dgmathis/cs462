@@ -9,7 +9,7 @@ class V1 extends API {
 		$curTime = date('Y-m-d H:i:s');
 		
 		$activities = $activitysModel->select(array(
-			'Conditions' => "date >= $curTime"
+			'Conditions' => "date >= '$curTime'"
 		));
 		
 		print $activities;
