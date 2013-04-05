@@ -16,7 +16,7 @@
 			</tr>
 			<tr>
 				<td><b>ESL for this team:</b></td>
-				<td><?php echo ESL . DS . 'team' . DS . $user['id']; ?></td>
+				<td><?php echo ESL . DS . 'team' . DS . $team['id']; ?></td>
 			</tr>
 		</tbody>
 	</table>
