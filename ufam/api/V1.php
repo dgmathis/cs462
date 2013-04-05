@@ -2,7 +2,7 @@
 
 class V1 extends API {
 	
-	public function rqf_get_activities($id) {
+	public function rfq_get_activities($id) {
 		
 		$activitysModel = $this->getModel('Activitys');
 
