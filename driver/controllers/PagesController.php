@@ -17,6 +17,7 @@ class PagesController extends Controller {
 		$data['firstname'] = $settingsModel->getValue('firstname');
 		$data['lastname'] = $settingsModel->getValue('lastname');
 		$data['phonenumber'] = $settingsModel->getValue('driver_phone_number');
+		$data['guid'] = $settingsModel->getValue('guid');
 		
 		$lastCheckin = $settingsModel->getValue('last_checkin');
 		if(!empty($lastCheckin)) {
@@ -30,6 +31,17 @@ class PagesController extends Controller {
 		$deliverysModel = new DeliverysModel();
 		
 		$deliverys = $deliverysModel->select();
+		
+		for($i = 0; $i < count($deliverys); $i++) {
+			switch($deliverys[$i]['status']) {
+				case 'available':
+					$deliverys[$i]['class'] = 'warning';
+					break;
+				case 'Bid awarded':
+					$deliverys[$i]['class'] = 'success';
+					break;
+			}
+		}
 		
 		$this->setVar('deliverys', $deliverys);
 	}
@@ -48,6 +60,17 @@ class PagesController extends Controller {
 				header('Location: ' . ROOT . DS);
 			}
 		}
+	}
+	
+	public function gen_guid() {
+		$settingsModel = new SettingsModel();
+		
+		$guid = uniqid('D_');
+		
+		$settingsModel->setValue('guid', $guid);
+		
+		header('Location: ' . ROOT . DS);
+		die();
 	}
 	
 	public function create_account() {

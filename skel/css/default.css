@@ -1,0 +1,22 @@
+
+body {
+	padding-top: 60px;
+}
+
+.navbar-grey .navbar-inner {
+	background-color: #e5e5e5;
+	background-image: -moz-linear-gradient(top,#e5e5e5,#cccccc);
+	background-image: -webkit-gradient(linear,0 0,0 100%,from(#e5e5e5),to(#cccccc));
+	background-image: -webkit-linear-gradient(top,#e5e5e5,#cccccc);
+	background-image: -o-linear-gradient(top,#e5e5e5,#cccccc);
+	background-image: linear-gradient(to bottom,#e5e5e5,#cccccc);
+	background-repeat: repeat-x;
+	border-color: #bbbbbb;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe5e5e5',endColorstr='#ffcccccc',GradientType=0);
+}
+
+@media (max-width: 979px) {
+	body {
+		padding-top: 0px;
+	}
+}

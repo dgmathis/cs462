@@ -45,14 +45,14 @@ class V1 extends API {
 						die();
 					}
 
-					$storeId = $deliveryData[0]['store_id'];
+					$callbackUrl = $deliveryData[0]['store_esl'];
 					
-					if(empty($storeId)) {
+					if(empty($callbackUrl)) {
 						error_log("Unable to get StoreId");
 						die();
 					}
 
-					$output = $this->placeBid($deliveryId, $storeId);
+					$output = $this->placeBid($deliveryId, $callbackUrl);
 
 					if(strcasecmp(trim($output), "received") != 0) {
 						error_log("Unable to send bid to store");
@@ -64,27 +64,30 @@ class V1 extends API {
 		die();
 	}
 	
-	public function receive_event($id) {
+	public function rfq_bid_awarded($id) {
+		$deliveryId = $_POST['delivery_id'];
 		
-		if(!empty($_POST)) {
-			$domain = $_POST['_domain'];
-			$eventName = $_POST['_name'];
-			
-			$function = $domain . '_' . $eventName;
-			
-			if(method_exists($this, $function)){
-				call_user_func_array(array($this, $function), array($id));
-			} else {
-				print($function . ' does not exist');
-				die();
-			}
+		$deliverysModel = $this->getModel('Deliverys');
+		
+		$delivery = $deliverysModel->getByField('ext_delivery_id', $deliveryId);
+		
+		if($delivery === false) {
+			print('Delivery does not exist: ' . $deliveryId);
+			die();
 		}
 		
-		print("Where's the POST data?");
+		$delivery['status'] = 'Bid awarded';
+		
+		if(!$deliverysModel->update($delivery)) {
+			print('Failed to update delivery status');
+			die();
+		}
+		
+		print('received');
 		die();
 	}
 	
-	public function rqf_delivery_ready($id) {
+	public function rfq_delivery_ready($id) {
 		
 		if(!empty($_POST)) {
 			
@@ -95,38 +98,39 @@ class V1 extends API {
 				die();
 			}
 			
-			$storesModel = $this->getModel('Stores');
+			$guildsModel = $this->getModel('Guilds');
 			
-			$storeData = $storesModel->select(array(
+			$guildData = $guildsModel->select(array(
 				'Conditions' => "id = '$id'",
 				'Limit' => 1
 			));
 			
-			if(empty($storeData)) {
-				print("No store registered with the provide esl");
+			if(empty($guildData)) {
+				print("No guild registered with the provide esl");
 				die();
 			}
 			
-			$storeId = $storeData[0]['id'];
+			$callbackUrl = $_POST['bid_callback_url'];
 			
-			$data['store_id'] = $storeId;
+			$data['store_esl'] = $callbackUrl;
 			$data['status'] = 'available';
 			$data['ext_delivery_id'] = $deliveryId;
 			$data['pickup_time'] = (isset($_POST['pickup_time'])) ? $_POST['pickup_time'] : null;
 			$data['pickup_address'] = (isset($_POST['pickup_address'])) ? $_POST['pickup_address'] : null;
 			$data['delivery_time'] = (isset($_POST['delivery_time'])) ? $_POST['delivery_time'] : null;
 			$data['delivery_address'] = (isset($_POST['delivery_address'])) ? $_POST['delivery_address'] : null;
+			$data['guild_id'] = $id;
 			
 			$deliverysModel = $this->getModel('Deliverys');
 			
 			$deliverysModel->insert($data);
 			
-			if($this->isInRange($storeData[0])) {
+			if($this->isInRange($_POST['store_lat'], $_POST['store_lng'])) {
 
-				$output = $this->placeBid($deliveryId, $storeId);
+				$output = $this->placeBid($deliveryId, $callbackUrl);
 				
-				if(strcasecmp(trim($output), "received") != 0) {
-					print("Unable to send bid to store");
+				if($output !== false && strcasecmp(trim($output), "received") != 0) {
+					print("Unable to send bid to store: " . $output);
 					die();
 				}
 				
@@ -162,7 +166,6 @@ class V1 extends API {
 
 		$client = new Services_Twilio($AccountSid, $AuthToken);
 		
-		
 		$sms = $client->account->sms_messages->create(
 			"+14355038056", 
 			$number,
@@ -170,62 +173,51 @@ class V1 extends API {
 		);
 	}
 	
-	private function placeBid($deliveryId, $storeId) {
-		
+	private function placeBid($deliveryId, $callbackUrl) {
+
 		$settingsModel = $this->getModel('Settings');
 		
 		$bid['_domain'] = 'rqf';
 		$bid['_name'] = 'bid_available';
+		$bid['driver_guid'] = $settingsModel->getValue('guid');
 		$bid['delivery_id'] = $deliveryId;
 		$bid['driver_name'] = $settingsModel->getValue('firstname') . ' ' . $settingsModel->getValue('lastname');
-		$bid['est_delivery_time'] = "20 min";
+		$bid['est_delivery_time'] = strval(rand(5, 45)) . "min";
 
-		$storesModel = $this->getModel('Stores');
-		
-		$storeData = $storesModel->select(array(
-			'Conditions' => "id = '$storeId'",
-			'Limit' => 1,
-			'Fields' => 'esl'
-		));
-		
-		if(empty($storeData)) {
-			return 'Failed to get store data';
-		}
-		
-		$storeEsl = $storeData[0]['esl'];
-		
 		$ch = curl_init();
 		
-		curl_setopt($ch, CURLOPT_URL, $storeEsl);
+		curl_setopt($ch, CURLOPT_URL, $callbackUrl);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($bid));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		
 		$output = curl_exec($ch);
 		
-		$deliveryModel = $this->getModel('Deliverys');
-		$deliveryData = $deliveryModel->select(array(
-			'Conditions' => "ext_delivery_id = '$deliveryId'",
-			'Limit' => 1
-		));
-		
-		if(!empty($deliveryData)) {
-			$data['id'] = $deliveryData[0]['id'];
-			$data['status'] = 'Bid placed';
-			
-			$deliveryModel->update($data);
+		if($output !== false) {
+			$deliveryModel = $this->getModel('Deliverys');
+			$deliveryData = $deliveryModel->select(array(
+				'Conditions' => "ext_delivery_id = '$deliveryId'",
+				'Limit' => 1
+			));
+
+			if(!empty($deliveryData)) {
+				$data['id'] = $deliveryData[0]['id'];
+				$data['status'] = 'Bid placed';
+
+				$deliveryModel->update($data);
+			}
 		}
 		
 		return $output;
 	}
-	private function isInRange($storeData) {
+	private function isInRange($lat, $lng) {
 
-		if(empty($storeData)) {
+		if(empty($lat) || empty($lng)) {
 			return false;
 		}
 		
-		$lat1 = $storeData['lat'];
-		$lng1 = $storeData['lng'];
+		$lat1 = $lat;
+		$lng1 = $lng;
 		
 		$settingsModel = $this->getModel('Settings');
 		
@@ -245,7 +237,7 @@ class V1 extends API {
 		
 		$distance = $this->distance($lat1, $lng1, $lat2, $lng2);
 		
-		return ($distance < 20);
+		return ($distance < 40);
 	}
 	
 	private function distance($lat1, $lng1, $lat2, $lng2, $miles = true)

@@ -3,7 +3,7 @@
 class UsersModel extends Model {
 	
 	public function addUser($user) {
-		$id = $user['id'];
+		$username = $user['username'];
 		
 		$result = $this->validateUser($user);
 		
@@ -12,7 +12,7 @@ class UsersModel extends Model {
 		}
 		
 		$existing = $this->select(array(
-			'Conditions' => "id = '$id'",
+			'Conditions' => "username = '$username'",
 			'Limit' => 1
 		));
 		

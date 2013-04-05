@@ -2,7 +2,7 @@
 
 class AdminController extends Controller {
 
-	var $models = array('Admin', 'Users', 'Deliverys');
+	var $models = array('Admin', 'Users', 'Deliverys', 'Guilds');
 	var $layout = 'admin';
 	
 	public function before() {
@@ -18,12 +18,19 @@ class AdminController extends Controller {
 			'Conditions' => "esl IS NOT NULL"
 		));
 		
+		$guildsModel = new GuildsModel();
+		
+		$guilds = $guildsModel->select();
+		
 		$deliverysModel = new DeliverysModel();
 		
-		$deliverys = $deliverysModel->select();
+		$deliverys = $deliverysModel->select(array(
+			'Limit' => 8
+		));
 		
 		$this->setVar('availableUsers', $availableUsers);
 		$this->setVar('deliverys', $deliverys);
+		$this->setVar('guilds', $guilds);
 	}
 	
 	public function request_delivery() {
@@ -41,33 +48,33 @@ class AdminController extends Controller {
 				$event['_domain'] = 'rqf';
 				$event['_name'] = 'delivery_ready';
 				$event['_timestamp'] = time();
-				$event['store_esl'] = STORE_ESL;
 				$event['delivery_id'] = $deliverysModel->getLastInsertId();
 				
 				foreach($data as $key => $value) {
 					$event[$key] = $value;
 				}
 
-				$userModel = new UsersModel();
-
-				$availableUsers = $userModel->select(array(
+				$guildsModel = new GuildsModel();
+				
+				$guilds = $guildsModel->select(array(
 					'Conditions' => "esl IS NOT NULL"
 				));
 
-				foreach($availableUsers as $user) {
-					$this->send_request($user, $event);
+				foreach($guilds as $guild) {
+					$this->send_request($guild, $event);
 				}
+				
+				header("Location: " . ROOT . DS . "admin");
+				die();
 			}
 		}
 	}
 	
-	private function send_request($user, $event) {
-		$esl = $user['esl'];
+	private function send_request($guild, $event) {
+
+		$event['bid_callback_url'] = ESL . DS . 'guild' . DS . $guild['id'];
 		
-		$event['driver_firstname'] = $user['firstname'];
-		$event['drivet_lastname'] = $user['lastname'];
-		
-		error_log("ESL: " . $esl);
+		$esl = $guild['esl'];
 		
 		$ch = curl_init();
 		
@@ -80,13 +87,8 @@ class AdminController extends Controller {
 
 		curl_close ($ch);
 		
-		if(strcasecmp(trim($server_output), "received") == 0) {
-			header('location: ' . ROOT . '/admin');
-		} else {
-			print($server_output);
-			die();
-			$message = 'Failed to send request';
-			$this->setVar('message', $message);
+		if(strcasecmp(trim($server_output), "received") != 0) {
+			Core::setFlash($server_output);
 		}
 	}
 	

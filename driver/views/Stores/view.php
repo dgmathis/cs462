@@ -7,7 +7,7 @@
 		</tr>
 		<tr>
 			<td><b>Driver ESL For This Store</b></td>
-			<td><?php echo DRIVER_ESL . DS . $store['id']; ?></td>
+			<td><?php echo ESL . DS . 'store' . DS . $store['id']; ?></td>
 		</tr>
 		<tr>
 			<td><b>Store ESL</b></td>

@@ -2,7 +2,7 @@
 <h3><?php echo $user['firstname'] . ' ' . $user['lastname']; ?></h3>
 
 <h4>Store ESL For This Driver</h4>
-<p><?php echo STORE_ESL . DS . $user['id']; ?></p>
+<p><?php echo ESL . DS . 'driver' . DS . $user['id']; ?></p>
 
 <?php if(!empty($user['esl'])): ?>
 <h4>Driver ESL</h4>

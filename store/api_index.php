@@ -5,12 +5,13 @@ session_start();
 date_default_timezone_set('America/Denver');
 
 define('DS', '/');
-define('ROOT', DS . 'cs462' . DS . basename(dirname(__FILE__)));
-define('STORE_ESL', 'http://' . $_SERVER['SERVER_NAME'] . ROOT . DS . 'api' . DS . 'v1' . DS . 'receive_event');
+define('ROOT', DS . basename(dirname(dirname(__FILE__))) . DS . basename(dirname(__FILE__)));
+define('ESL', 'http://' . $_SERVER['SERVER_NAME'] . ROOT . DS . 'api' . DS . 'v1' . DS . 'receive_event');
 
-require 'api' . DS . 'API.php';
-require 'models' . DS . 'Model.php';
-require 'core' . DS . 'Database.php';
+require 'skel' . DS . 'api' . DS . 'API.php';
+require 'skel' . DS . 'models' . DS . 'Model.php';
+require 'core' . DS . 'DBConfig.php';
+require 'skel' . DS . 'core' . DS . 'Database.php';
 
 $version = $_GET['version'];
 $action = $_GET['action'];

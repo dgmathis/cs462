@@ -3,13 +3,13 @@
 $username = '';
 $userUrl = '#';
 $loginStatus = 'login';
-$loginUrl = ROOT . '/users/login';
+$loginUrl = ROOT . '/admin/login';
 
-if(isset($_SESSION['user'])) {
-	$username = $_SESSION['user']['username'];
-	$userUrl = ROOT . '/users/view/' . $_SESSION['user']['id'];
+if(isset($_SESSION['admin'])) {
+	$username = $_SESSION['admin']['username'];
+	$userUrl = ROOT . '/admin';
 	$loginStatus = 'logout';
-	$loginUrl = ROOT . '/users/logout';
+	$loginUrl = ROOT . '/admin/logout';
 }
 		
 ?>
@@ -17,15 +17,15 @@ if(isset($_SESSION['user'])) {
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>CS462 Test site</title>
-		<link rel="stylesheet" type="text/css" href="<?php echo ROOT; ?>/bootstrap/css/bootstrap.min.css" />
-		<link rel="stylesheet" type="text/css" href="<?php echo ROOT; ?>/bootstrap/css/bootstrap-responsive.min.css" />
-		<link rel="stylesheet" type="text/css" href="<?php echo ROOT; ?>/bootstrap/css/bootstrap-timepicker.min.css" />
-		<link rel="stylesheet" type="text/css" href="<?php echo ROOT; ?>/css/default.css" />
+		<title>CS462 Store site</title>
+		<link rel="stylesheet" type="text/css" href="<?php echo SHARED; ?>/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo SHARED; ?>/bootstrap/css/bootstrap-responsive.min.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo SHARED; ?>/bootstrap/css/bootstrap-timepicker.min.css" />
+		<link rel="stylesheet" type="text/css" href="<?php echo SHARED; ?>/css/default.css" />
 		
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-		<script type="text/javascript" src="<?php echo ROOT; ?>/bootstrap/js/bootstrap-timepicker.min.js"></script>
-		<script type="text/javascript" src="<?php echo ROOT; ?>/bootstrap/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="<?php echo SHARED; ?>/bootstrap/js/bootstrap-timepicker.min.js"></script>
+		<script type="text/javascript" src="<?php echo SHARED; ?>/bootstrap/js/bootstrap.min.js"></script>
 	</head>
 	<body>
 		<div class="navbar navbar-inverse navbar-fixed-top">
@@ -37,7 +37,7 @@ if(isset($_SESSION['user'])) {
 							<a href="<?php echo ROOT . '/admin'; ?>">Admin</a>
 						</li>
 						<li>
-							<a href="<?php echo ROOT . '/users'; ?>">Drivers</a>
+							<a href="<?php echo ROOT . '/guilds'; ?>">Guilds</a>
 						</li>
 					</ul>
 					<p class="navbar-text pull-right">
