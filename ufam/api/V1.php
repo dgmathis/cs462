@@ -12,6 +12,13 @@ class V1 extends API {
 			'Conditions' => "date >= '$curTime'"
 		));
 		
+		$activityIds = $activitysModel->getActivityIdsByTeam($id);
+		
+		$len = count($activities);
+		for($i = 0; $i < $len; $i++) {
+			$activities[$i]['already_joined'] = (in_array($activities[$i]['id'], $activityIds)) ? true : false;
+		}
+		
 		print json_encode($activities);
 		die();
 	}

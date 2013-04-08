@@ -1,7 +1,9 @@
 <?php Core::getFlash(); ?>
 
-<a class="btn btn-primary pull-right" href="<?php echo ROOT . DS . 'teams' . DS . 'edit' . DS . $team['id']; ?>">Edit Team</a>
-
+<?php if(!empty($_SESSION['team']) && $_SESSION['team']['id'] == $team['id']): ?>
+	<a class="btn btn-primary pull-right" href="<?php echo ROOT . DS . 'teams' . DS . 'edit' . DS . $team['id']; ?>">Edit Team</a>
+<?php endif; ?>
+	
 <div class="mini-layout">
 	<h3><?php echo $team['name']; ?></h3>
 	<table class="table table-bordered table-striped">
@@ -50,7 +52,9 @@
 			<?php endforeach; ?>
 		</tbody>
 	</table>
-	<a class="btn btn-primary" href="<?php echo ROOT . DS . 'activitys' . DS . 'add'; ?>">Create New Activity</a>
+	<?php if(isset($_SESSION['team']) && $_SESSION['team']['id'] == $team['id']): ?>
+		<a class="btn btn-primary" href="<?php echo ROOT . DS . 'activitys' . DS . 'add'; ?>">Create New Activity</a>
+	<?php endif; ?>
 </div>
 
 

@@ -1,5 +1,7 @@
-<a class="btn btn-primary pull-right" href="<?php echo ROOT . DS . 'activitys' . DS . 'edit' . DS . $activity['id']; ?>">Edit Activity</a>
-
+<?php if(isset($_SESSION['team']) && $_SESSION['team']['id'] == $activity['owner_team_id']): ?>
+	<a class="btn btn-primary pull-right" href="<?php echo ROOT . DS . 'activitys' . DS . 'edit' . DS . $activity['id']; ?>">Edit Activity</a>
+<?php endif; ?>
+	
 <h3><?php echo $activity['title']; ?></h3>
 
 <table class="table table-bordered table-striped">
@@ -31,7 +33,7 @@
 		<tbody>
 			<?php foreach($teams as $team): ?>
 				<tr>
-					<td><a href="<?php echo ROOT . DS . 'teams' . DS . 'view' . DS . $team['id']; ?>"><?php echo $team['name']; ?></a></td>
+					<td><a href="<?php echo ROOT . DS . 'teams' . DS . 'view' . DS . $team['team_id']; ?>"><?php echo $team['name']; ?></a></td>
 					<td>
 						<?php if(isset($_SESSION['team']) && $_SESSION['team']['id'] == $team['team_id']): ?>
 						<a href="<?php echo ROOT . DS . 'activitys' . DS . 'unjoin' . DS .$activity['id']; ?>">Unjoin</a>

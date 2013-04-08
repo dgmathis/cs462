@@ -32,9 +32,12 @@ class Core {
 			call_user_func_array(array($controller, $_action), $parameters);
 
 			$this->render($controller, $_action);
+			
+			$_SESSION['last_page'] = $_SERVER['REQUEST_URI'];
+			
 			exit;
 		}
-
+		
 		header('HTTP/1.0 404 NOT FOUND');
 		exit();
 	}
@@ -104,6 +107,58 @@ class Core {
 		if(!empty(self::$flash)) {
 			print('<div class="alert"><button type="button" class="close" data-dismiss="alert">&times;</button>' . self::$flash . '</div>'); 
 		}
+	}
+	
+	public static function redirect($url = null) {
+		if(empty($url)) {
+			$url = $_SESSION['last_page'];
+		}
+		
+		if(empty($url)) {
+			$url = ROOT;
+		}
+		
+		header('Location: ' . $url);
+		die();
+	}
+	
+	public static function debug($obj) {
+		
+		$result = '<pre>';
+		$result = '<code>';
+		
+		$result .= self::getDebugStr($obj, 0);
+		
+		$result .= '</code>';
+		$result .= '</pre>';
+		
+		print_r($result);
+	}
+	
+	private static function getDebugStr($obj, $depth = 0) {
+		$tab = "&nbsp;&nbsp;";
+		$indent_str = str_repeat($tab, $depth);
+
+		if(!isset($obj)) {
+			$result = "null";
+		}
+		else if(is_array($obj)) {
+			$result = "{<br />";
+
+			foreach ($obj as $key => $val) {
+				$result .= $indent_str . $tab . $key . " : " . self::getDebugStr($val, $depth + 1) .",<br />";
+			}
+
+			$result .= $indent_str . "}";
+		}
+		else if(is_object($obj)) {
+			$result .= "<Object>";
+		}
+		else {
+			$result = $obj;
+		}
+		
+		return $result;
 	}
 	
 	private static function handleFlash() {

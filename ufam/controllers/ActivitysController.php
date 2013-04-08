@@ -5,40 +5,43 @@ class ActivitysController extends Controller {
 	
 	public function index() {
 		
-		$activitys = $this->getActivitys();
+		$activityModel = new ActivitysModel();
+		
+		$activitys = $activityModel->getActivitys();
 		
 		$this->setVar('activitys', $activitys);
 	}
 	
-	private function getActivitys() {
-		$activitysModel = new ActivitysModel();
-		$teamsModel = new TeamsModel();
-		
-		$activitys = $activitysModel->select();
-		
-		$len = count($activitys);
-		
-		for($i = 0; $i < $len; $i++) {
-			$teams = $teamsModel->getTeamsByActivity($activitys[$i]['id']);
-			$activitys[$i]['hasJoined'] = (empty($teams)) ? false : true;
+	public function add() {
+		if(empty($_SESSION['team'])) {
+			Core::setFlash("Please log in to create an activity");
+			Core::redirect();
 		}
 		
-		return $activitys;
-	}
-	
-	public function add() {
 		if(!empty($_POST)) {
-			$data['title'] = $_POST['title'];
-			$data['date'] = $_POST['date'];
-			$data['location'] = $_POST['location'];
-			$data['description'] = $_POST['description'];
+			$activityData['title'] = $_POST['title'];
+			$activityData['date'] = $_POST['date'];
+			$activityData['location'] = $_POST['location'];
+			$activityData['description'] = $_POST['description'];
+			$activityData['owner_team_id'] = $_SESSION['team']['id'];
 			
 			$activityModel = new ActivitysModel();
 			
-			$result = $activityModel->addActivity($data);
+			$result = $activityModel->addActivity($activityData);
 			
 			if($result['code'] == 0) {
 				Core::setFlash($result['message']);
+			}
+			
+			$activitysTeamsModel = new ActivitysTeamsModel();
+			
+			$activityTeamData['team_id'] = $_SESSION['team']['id'];
+			$activityTeamData['activity_id'] = $activityModel->getLastInsertId();
+			
+			$result = $activitysTeamsModel->insert($activityTeamData);
+			
+			if(!$result) {
+				Core::setFlash('Failed to join team to activity');
 			}
 			
 			header('location: ' . ROOT . DS . 'activitys');
@@ -47,15 +50,34 @@ class ActivitysController extends Controller {
 	}
 	
 	public function edit($id) {
-
+		
+		$activityModel = new ActivitysModel();
+		
+		$activity = $activityModel->select(array(
+			'Conditions' => "id = '$id'",
+			'Limit' => 1
+		));
+		
+		if(empty($activity)) {
+			Core::setFlash('Sorry, but that activity does not exist');
+			header('location: ' . ROOT . DS . 'activitys');
+			die();
+		}
+		
+		$activity = $activity[0];
+		
+		if(empty($_SESSION['team']) || $_SESSION['team']['id'] != $activity['owner_team_id']) {
+			Core::setFlash('You do not have permission to edit that activity');
+			header('location: ' . ROOT . DS . 'activitys');
+			die();
+		}
+		
 		if(!empty($_POST)) {
 			$data['id'] = $id;
 			$data['title'] = $_POST['title'];
 			$data['date'] = $_POST['date'];
 			$data['location'] = $_POST['location'];
 			$data['description'] = $_POST['description'];
-			
-			$activityModel = new ActivitysModel();
 			
 			$result = $activityModel->updateActivity($data);
 			
@@ -66,25 +88,10 @@ class ActivitysController extends Controller {
 				die();
 			}
 			
-			$this->setVar('activity', $data);
-			
-		} else {
-			
-			$activityModel = new ActivitysModel();
-			
-			$activityData = $activityModel->select(array(
-				'Conditions' => "id = '$id'",
-				'Limit' => 1
-			));
-			
-			if(empty($activityData)) {
-				Core::setFlash('Sorry, but that activity does not exist');
-				header('location: ' . ROOT . DS . 'activitys');
-				die();
-			}
-			
-			$this->setVar('activity', $activityData[0]);
+			$activity = $data;
 		}
+		
+		$this->setVar('activity', $activity);
 	}
 	
 	public function view($id) {
@@ -125,21 +132,18 @@ class ActivitysController extends Controller {
 		
 		if(empty($teamId)) {
 			Core::setFlash("You cannot unjoin that activity");
-			header("Location: " . ROOT . DS . 'activitys');
-			die();
+			Core::redirect();
 		}
 		
 		$activitysTeamsModel = new ActivitysTeamsModel();
 		
 		if(!$activitysTeamsModel->unjoinActivity($activityId, $teamId)) {
 			Core::setFlash("Failed to unjoin that activity");
-			header("Location: " . ROOT . DS . 'activitys');
-			die();
+			Core::redirect();
 		}
 		
 		Core::setFlash("You successfully unjoined that activity");
-		header("Location: " . ROOT . DS . 'activitys');
-		die();
+		Core::redirect();
 	}
 	
 	public function join($activityId) {
@@ -147,20 +151,26 @@ class ActivitysController extends Controller {
 		
 		if(empty($teamId)) {
 			Core::setFlash("You cannot join that activity");
-			header("Location: " . ROOT . DS . 'activitys');
-			die();
+			Core::redirect();
 		}
 		
 		$activitysTeamsModel = new ActivitysTeamsModel();
 		
 		if(!$activitysTeamsModel->joinActivity($activityId, $teamId)) {
 			Core::setFlash("Failed to join that activity");
-			header("Location: " . ROOT . DS . 'activitys');
-			die();
+			Core::redirect();
 		}
 		
 		Core::setFlash("You successfully joined that activity");
-		header("Location: " . ROOT . DS . 'activitys');
+		Core::redirect();
+	}
+	
+	public function get_forecast() {
+		include 'tools' . DS . 'HAMWeather.php';
+		
+		$weather = HAMWeather::get_forecast();
+		
+		Core::debug($weather);
 		die();
 	}
 }

@@ -54,7 +54,27 @@ class ActivitysModel extends Model {
 			return array('code' => 0, 'message' => 'Please provide a location.');
 		}
 		
+		if(empty($activity['owner_team_id'])) {
+			return array('code' => 0, 'message' => 'Please log in.');
+		}
+		
 		return array('code' => 1);
+	}
+	
+	public function getActivitys() {
+
+		$activitys = $this->select();
+		
+		if(isset($_SESSION['team']['id'])) {
+			$activityIds = $this->getActivityIdsByTeam($_SESSION['team']['id']);
+			
+			$len = count($activitys);
+			for($i = 0; $i < $len; $i++) {
+				$activitys[$i]['already_joined'] = (in_array($activitys[$i]['id'], $activityIds)) ? true : false;
+			}
+		}
+		
+		return $activitys;
 	}
 	
 	public function getActivitysByTeam($teamId) {
@@ -64,5 +84,17 @@ class ActivitysModel extends Model {
 		));
 		
 		return $activitys;
+	}
+	
+	public function getActivityIdsByTeam($teamId) {
+		$activitys = $this->getActivitysByTeam($teamId);
+		
+		$ids = array();
+		
+		foreach($activitys as $activity) {
+			$ids[] = $activity['activity_id'];
+		}
+		
+		return $ids;
 	}
 }

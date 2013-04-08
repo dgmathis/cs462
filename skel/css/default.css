@@ -15,6 +15,10 @@ body {
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffe5e5e5',endColorstr='#ffcccccc',GradientType=0);
 }
 
+.nowrap {
+	white-space: nowrap;
+}
+
 @media (max-width: 979px) {
 	body {
 		padding-top: 0px;

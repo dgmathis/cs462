@@ -2,13 +2,19 @@
 
 class PagesController extends Controller {
 	
-	var $models = array('Activitys');
+	var $models = array('Activitys', 'Teams');
 	
 	public function index() {
-		$activitysModel = new ActivitysModel();
+		$activityModel = new ActivitysModel();
 		
-		$activitys = $activitysModel->select();
-
+		$activitys = $activityModel->getActivitys();
+		
 		$this->setVar('activitys', $activitys);
+		
+		$teamModel = new TeamsModel();
+		
+		$teams = $teamModel->select();
+		
+		$this->setVar('teams', $teams);
 	}	
 }
