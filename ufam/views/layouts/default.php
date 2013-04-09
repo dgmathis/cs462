@@ -39,6 +39,9 @@ if(isset($_SESSION['team'])) {
 						<li>
 							<a href="<?php echo ROOT . '/teams'; ?>">Teams</a>
 						</li>
+						<li>
+							<a href="<?php echo ROOT . '/activitys/forecast'; ?>">Forecast</a>
+						</li>
 					</ul>
 					<p class="navbar-text pull-right">
 						<?php if(!empty($username)): ?><a href="<?php echo $userUrl; ?>"><?php echo $username; ?></a> | <?php endif; ?>

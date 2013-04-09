@@ -165,12 +165,33 @@ class ActivitysController extends Controller {
 		Core::redirect();
 	}
 	
-	public function get_forecast() {
+	public function forecast() {
 		include 'tools' . DS . 'HAMWeather.php';
 		
-		$weather = HAMWeather::get_forecast();
+		$weather = HAMWeather::get_forecast('84058');
 		
-		Core::debug($weather);
-		die();
+		$forecast = $weather['response'][0]['periods'];
+		
+		$activitysModel = new ActivitysModel();
+		
+		for($i = 0; $i < 7; $i++){
+			$start = date('Y-m-d 00:00:00', $forecast[$i]['timestamp']);
+			$end = date('Y-m-d 24:59:59', $forecast[$i]['timestamp']);
+			$activitys = $activitysModel->select(array(
+				'Conditions' => "date >= '$start' AND date <= '$end'"
+			));
+			
+			$forecast[$i]['activities'] = array();
+			
+			foreach($activitys as $activity){
+				$forecast[$i]['activities'][] = $activity;
+			}
+		}
+		
+		$this->setVar('forecast', $forecast);
+	}
+	
+	public function notify_teams() {
+	
 	}
 }
