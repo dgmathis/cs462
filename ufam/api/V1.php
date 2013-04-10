@@ -84,7 +84,7 @@ class V1 extends API {
 		
 		print("Made it here 3");
 		
-		$activitysTeamsModel = $this->getModel('Activitys');
+		$activitysTeamsModel = $this->getModel('ActivitysTeams');
 		
 		print("Made it here 3.5");
 		
@@ -117,7 +117,7 @@ class V1 extends API {
 		
 		print("Made it here 6");
 		
-		$activitysTeamsModel = new ActivitysTeamsModel();
+		$activitysTeamsModel = $this->getModel('ActivitysTeams');
 		
 		if(!$activitysTeamsModel->joinActivity($activityId, $teamId)) {
 			print("Failed to join that activity");
