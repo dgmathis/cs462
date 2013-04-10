@@ -86,6 +86,8 @@ class V1 extends API {
 		
 		$activitysTeamsModel = $this->getModel('Activitys');
 		
+		print("Made it here 3.5");
+		
 		if(!$activitysTeamsModel->unjoinActivity($activityId, $teamId)) {
 			print("Failed to unjoin that activity");
 			die();
