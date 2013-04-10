@@ -15,9 +15,9 @@
 				<tr>
 					<td><a href="<?php echo ROOT . DS . 'teams' . DS . 'view' . DS . $team['id']; ?>"><?php echo $team['name']; ?></a></td>
 					<td><?php echo $team['username']; ?></td>
-					<td>
+					<td class="nowrap actions">
 						<?php if(isset($_SESSION['team']) && $_SESSION['team']['id'] == $team['id']): ?>
-						<a href="<?php echo ROOT . DS . 'teams' . DS . 'edit' . DS . $team['id']; ?>">Edit</a> | 
+						<a href="<?php echo ROOT . DS . 'teams' . DS . 'edit' . DS . $team['id']; ?>">Edit</a> 
 						<a href="<?php echo ROOT . DS . 'teams' . DS . 'delete' . DS .$team['id']; ?>">Delete</a>
 						<?php endif; ?>
 					</td>

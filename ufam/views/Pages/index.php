@@ -19,13 +19,13 @@
 					<td><?php echo $activity['date']; ?></td>
 					<td><?php echo $activity['location']; ?></td>
 					<td><?php echo $activity['description']; ?></td>
-					<td class="nowrap">
-						<a href="<?php echo ROOT . DS . 'activitys' . DS . 'edit' . DS . $activity['id']; ?>">Edit</a> | 
+					<td class="nowrap actions">
+						<a href="<?php echo ROOT . DS . 'activitys' . DS . 'edit' . DS . $activity['id']; ?>">Edit</a> 
 						<a href="<?php echo ROOT . DS . 'activitys' . DS . 'delete' . DS .$activity['id']; ?>">Delete</a>
 						<?php if(isset($activity['already_joined']) && $activity['already_joined'] == true): ?>
-						| <a href="<?php echo ROOT . DS . 'activitys' . DS . 'unjoin' . DS .$activity['id']; ?>">Unjoin</a>
+						<a href="<?php echo ROOT . DS . 'activitys' . DS . 'unjoin' . DS .$activity['id']; ?>">Unjoin</a>
 						<?php elseif(isset($activity['already_joined']) && $activity['already_joined'] == false): ?> 
-						| <a href="<?php echo ROOT . DS . 'activitys' . DS . 'join' . DS .$activity['id']; ?>">Join</a>
+						<a href="<?php echo ROOT . DS . 'activitys' . DS . 'join' . DS .$activity['id']; ?>">Join</a>
 						<?php endif; ?>
 					</td>
 				</tr>
@@ -52,9 +52,9 @@
 				<tr>
 					<td><a href="<?php echo ROOT . DS . 'teams' . DS . 'view' . DS . $team['id']; ?>"><?php echo $team['name']; ?></a></td>
 					<td><?php echo $team['username']; ?></td>
-					<td>
+					<td class="nowrap actions">
 						<?php if(isset($_SESSION['team']) && $_SESSION['team']['id'] == $team['id']): ?>
-						<a href="<?php echo ROOT . DS . 'teams' . DS . 'edit' . DS . $team['id']; ?>">Edit</a> | 
+						<a href="<?php echo ROOT . DS . 'teams' . DS . 'edit' . DS . $team['id']; ?>">Edit</a> 
 						<a href="<?php echo ROOT . DS . 'teams' . DS . 'delete' . DS .$team['id']; ?>">Delete</a>
 						<?php endif; ?>
 					</td>

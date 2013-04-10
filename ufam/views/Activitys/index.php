@@ -19,7 +19,7 @@
 					<td><?php echo $activity['date']; ?></td>
 					<td><?php echo $activity['location']; ?></td>
 					<td><?php echo $activity['description']; ?></td>
-					<td class="nowrap">
+					<td class="nowrap actions">
 						<?php if(isset($_SESSION['team']) && $_SESSION['team']['id'] == $activity['owner_team_id']): ?>
 						<a href="<?php echo ROOT . DS . 'activitys' . DS . 'edit' . DS . $activity['id']; ?>">Edit</a>  
 						<a href="<?php echo ROOT . DS . 'activitys' . DS . 'delete' . DS .$activity['id']; ?>">Delete</a>
