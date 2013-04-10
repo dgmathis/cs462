@@ -56,9 +56,9 @@ class V1 extends API {
 		$result = $activitysModel->addActivity($activity);
 			
 		if($result['code'] == 0) {
-			print 'Failed to create activity';
+			print('Failed to create activity');
 		} else {
-			print 'success';
+			print('success');
 		}
 		
 		die();
@@ -66,53 +66,51 @@ class V1 extends API {
 	
 	public function rfq_unjoin_activity($teamId) {
 		
-		print("MADE IT HERE"); die();
-		
 		if(empty($teamId)) {
-			print "You cannot unjoin that activity";
+			print("You cannot unjoin that activity");
 			die();
 		}
 		
 		$activityId = $_POST['activity_id'];
 		
 		if(empty($activityId)) {
-			print "No activity ID provided";
+			print("No activity ID provided");
 			die();
 		}
 		
 		$activitysTeamsModel = $this->getModel('Activitys');
 		
 		if(!$activitysTeamsModel->unjoinActivity($activityId, $teamId)) {
-			print "Failed to unjoin that activity";
+			print("Failed to unjoin that activity");
 			die();
 		}
 		
-		print "success";
+		print("success");
 		die();
 	}
 	
 	public function rfq_join_activity($teamId) {
 		
 		if(empty($teamId)) {
-			print "You cannot unjoin that activity";
+			print("You cannot unjoin that activity");
 			die();
 		}
 		
 		$activityId = $_POST['activity_id'];
 		
 		if(empty($activityId)) {
-			print "No activity ID provided";
+			print("No activity ID provided");
 			die();
 		}
 		
 		$activitysTeamsModel = new ActivitysTeamsModel();
 		
 		if(!$activitysTeamsModel->joinActivity($activityId, $teamId)) {
-			print "Failed to join that activity";
+			print("Failed to join that activity");
 			die();
 		}
 		
-		print "success";
+		print("success");
 		die();
 	}
 }
