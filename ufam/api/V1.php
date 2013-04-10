@@ -66,10 +66,14 @@ class V1 extends API {
 	
 	public function rfq_unjoin_activity($teamId) {
 		
+		print("Made it here 1");
+		
 		if(empty($teamId)) {
 			print("You cannot unjoin that activity");
 			die();
 		}
+		
+		print("Made it here 2");
 		
 		$activityId = $_POST['activity_id'];
 		
@@ -77,6 +81,8 @@ class V1 extends API {
 			print("No activity ID provided");
 			die();
 		}
+		
+		print("Made it here 3");
 		
 		$activitysTeamsModel = $this->getModel('Activitys');
 		
@@ -91,10 +97,14 @@ class V1 extends API {
 	
 	public function rfq_join_activity($teamId) {
 		
+		print("Made it here 4");
+		
 		if(empty($teamId)) {
 			print("You cannot unjoin that activity");
 			die();
 		}
+		
+		print("Made it here 5");
 		
 		$activityId = $_POST['activity_id'];
 		
@@ -102,6 +112,8 @@ class V1 extends API {
 			print("No activity ID provided");
 			die();
 		}
+		
+		print("Made it here 6");
 		
 		$activitysTeamsModel = new ActivitysTeamsModel();
 		
