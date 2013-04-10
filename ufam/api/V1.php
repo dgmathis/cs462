@@ -51,6 +51,7 @@ class V1 extends API {
 		$activity['date'] = $_POST['date'];
 		$activity['location'] = $_POST['location'];
 		$activity['description'] = $_POST['description'];
+		$activity['owner_team_id'] = $id;
 		
 		$result = $activitysModel->addActivity($activity);
 			
