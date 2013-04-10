@@ -66,6 +66,8 @@ class V1 extends API {
 	
 	public function rfq_unjoin_activity($teamId) {
 		
+		print("MADE IT HERE"); die();
+		
 		if(empty($teamId)) {
 			print "You cannot unjoin that activity";
 			die();
