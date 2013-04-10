@@ -64,7 +64,7 @@ class V1 extends API {
 		die();
 	}
 	
-	public function unjoin($teamId) {
+	public function rfq_unjoin_activity($teamId) {
 		
 		if(empty($teamId)) {
 			print "You cannot unjoin that activity";
@@ -89,7 +89,7 @@ class V1 extends API {
 		die();
 	}
 	
-	public function join($teamId) {
+	public function rfq_join_activity($teamId) {
 		
 		if(empty($teamId)) {
 			print "You cannot unjoin that activity";
