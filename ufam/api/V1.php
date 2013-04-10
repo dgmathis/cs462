@@ -63,4 +63,54 @@ class V1 extends API {
 		
 		die();
 	}
+	
+	public function unjoin($teamId) {
+		
+		if(empty($teamId)) {
+			print "You cannot unjoin that activity";
+			die();
+		}
+		
+		$activityId = $_POST['activity_id'];
+		
+		if(empty($activityId)) {
+			print "No activity ID provided";
+			die();
+		}
+		
+		$activitysTeamsModel = $this->getModel('Activitys');
+		
+		if(!$activitysTeamsModel->unjoinActivity($activityId, $teamId)) {
+			print "Failed to unjoin that activity";
+			die();
+		}
+		
+		print "success";
+		die();
+	}
+	
+	public function join($teamId) {
+		
+		if(empty($teamId)) {
+			print "You cannot unjoin that activity";
+			die();
+		}
+		
+		$activityId = $_POST['activity_id'];
+		
+		if(empty($activityId)) {
+			print "No activity ID provided";
+			die();
+		}
+		
+		$activitysTeamsModel = new ActivitysTeamsModel();
+		
+		if(!$activitysTeamsModel->joinActivity($activityId, $teamId)) {
+			print "Failed to join that activity";
+			die();
+		}
+		
+		print "success";
+		die();
+	}
 }
