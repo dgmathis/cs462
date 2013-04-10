@@ -191,7 +191,77 @@ class ActivitysController extends Controller {
 		$this->setVar('forecast', $forecast);
 	}
 	
-	public function notify_teams() {
+	public function send_forecast_update() {
+		include 'tools' . DS . 'HAMWeather.php';
+		
+		$weather = HAMWeather::get_forecast('84058');
+		
+		$forecast = $weather['response'][0]['periods'];
+		
+		$activitysModel = new ActivitysModel();
+		
+		$message = "";
+		
+		for($i = 0; $i < 7; $i++){
+			$start = date('Y-m-d 00:00:00', $forecast[$i]['timestamp']);
+			$end = date('Y-m-d 24:59:59', $forecast[$i]['timestamp']);
+			$activitys = $activitysModel->select(array(
+				'Conditions' => "date >= '$start' AND date <= '$end'"
+			));
+			
+			foreach($activitys as $activity){
+				$message .= $this->notify_teams($activity['id'], $forecast[$i]);
+			}
+		}
+		
+		Core::setFlash($message);
+		Core::redirect();
+	}
 	
+	private function notify_teams($activityId, $forecast) {
+		
+		$activitysModel = new ActivitysModel();
+		
+		$activity = $activitysModel->getById($activityId);
+		
+		if(empty($activity)) {
+			return "Failed to get activity";
+		}
+		
+		$teamsModel = new TeamsModel();
+		
+		$teams = $teamsModel->getTeamsByActivity($activityId);
+		
+		$message = "";
+		$tab = "&nbsp;&nbsp;&nbsp;&nbsp;";
+		
+		foreach($teams as $team) {
+			$esl = $team['esl'];
+			
+			$data['_domain'] = 'event';
+			$data['_name'] = 'weather_update';
+			$data['date'] = $activity['date'];
+			$data['activity_id'] = $activity['id'];
+			$data['activity_title'] = $activity['title'];
+			$data['weather_status'] = $forecast['weatherPrimary'];
+			$data['weather'] = json_encode($forecast);
+			
+			$ch = curl_init();
+		
+			curl_setopt($ch, CURLOPT_URL, $esl);
+			curl_setopt($ch, CURLOPT_POST, 1);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+			curl_exec($ch);
+			
+			$message .= "Sent weather update: <br />";
+			$message .= $tab . "Team: " . $team['name'] . " - " . $esl . "<br />";
+			$message .= $tab . "Activity: " . $data['activity_title'] . "<br />";
+			$message .= $tab . "Weather Status: " . $data['weather_status'] . "<br />";
+			$message .= "<br />";
+		}
+		
+		return $message;
 	}
 }

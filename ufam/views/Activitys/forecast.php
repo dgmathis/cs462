@@ -25,4 +25,5 @@
 			</tr>
 		</tbody>
 	</table>
+	<a class="btn btn-primary" href="<?php echo ROOT . DS . 'activitys' . DS . 'send_forecast_update'; ?>">Notify Teams</a>
 </div>
